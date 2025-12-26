@@ -37,7 +37,7 @@ export class UsersController {
     description: 'List of all users',
     type: [UserResponseDto],
   })
-  async findAll() {
+  async findAll(): Promise<UserResponseDto[]> {
     return this.usersService.findAll();
   }
 
@@ -53,7 +53,9 @@ export class UsersController {
     description: 'List of users in the company',
     type: [UserResponseDto],
   })
-  async findByCompanyId(@Param('companyId') companyId: string) {
+  async findByCompanyId(
+    @Param('companyId') companyId: string,
+  ): Promise<UserResponseDto[]> {
     return this.usersService.findByCompanyId(companyId);
   }
 
@@ -69,7 +71,9 @@ export class UsersController {
     description: 'List of users in the team',
     type: [UserResponseDto],
   })
-  async findByTeamId(@Param('teamId') teamId: string) {
+  async findByTeamId(
+    @Param('teamId') teamId: string,
+  ): Promise<UserResponseDto[]> {
     return this.usersService.findByTeamId(teamId);
   }
 
@@ -89,7 +93,7 @@ export class UsersController {
     status: 404,
     description: 'User not found',
   })
-  async findByEmail(@Query('email') email: string) {
+  async findByEmail(@Query('email') email: string): Promise<UserResponseDto> {
     return this.usersService.findByEmail(email);
   }
 

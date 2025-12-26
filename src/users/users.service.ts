@@ -41,7 +41,6 @@ export class UsersService {
   }
 
   async create(createUserDto: CreateUserDto): Promise<User> {
-    // Check if user with email already exists
     const existingUser = await this.usersRepository.findByEmail(
       createUserDto.email,
     );
@@ -66,7 +65,6 @@ export class UsersService {
   }
 
   async update(id: string, updateUserDto: UpdateUserDto): Promise<User> {
-    // Check if user exists
     await this.findById(id);
 
     // Check if email is being changed and if it's already taken
@@ -101,13 +99,11 @@ export class UsersService {
   }
 
   async delete(id: string): Promise<User> {
-    // Check if user exists
     await this.findById(id);
     return this.usersRepository.delete(id);
   }
 
   async updateStatus(id: string, status: UserStatus): Promise<User> {
-    // Check if user exists
     await this.findById(id);
     return this.usersRepository.updateStatus(id, status);
   }
