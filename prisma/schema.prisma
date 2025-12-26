@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client"
   output   = "../generated/prisma"
@@ -11,6 +5,20 @@ generator client {
 
 datasource db {
   provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum PullRequestStatus {
+  ABANDONED
+  ACTIVE
+  COMPLETED
+  NOT_SET
+}
+
+enum UserStatus {
+  ACTIVE // Default status when a user accept the invitation to join a company
+  INACTIVE // Status when a user is deactivated by an admin
+  PENDING_TO_ACTIVATE // Status when a user is invited but has not accepted the invitation yet
 }
 
 model Company {
@@ -20,30 +28,78 @@ model Company {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  teams     Team[]
 }
 
 model User {
-  id        String  @id @default(uuid())
-  name      String
-  email     String  @unique
+  id     String       @id @default(uuid())
+  name   String?
+  email  String       @unique
+  stats  YearlyStats?
+  status UserStatus   @default(PENDING_TO_ACTIVATE)
+
   companyId String
   company   Company @relation(fields: [companyId], references: [id])
-  stats     Stats?
+
+  teamId String?
+  team   Team?   @relation(fields: [teamId], references: [id])
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
-model Stats {
-  id     String @id @default(uuid())
-  userId String @unique
-  user   User   @relation(fields: [userId], references: [id])
+model Team {
+  id   String @id @default(uuid())
+  name String
 
-  // Add your stats fields here
-  pullRequests Int @default(0)
-  commits      Int @default(0)
-  reviews      Int @default(0)
+  companyId String
+  company   Company @relation(fields: [companyId], references: [id])
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  users User[]
+}
+
+model YearlyStats {
+  id     String @id @default(uuid())
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  year Int
+
+  commentsRatePerPRPercent Int @default(0)
+  prCommentsMade           Int @default(0)
+  prsClosed                Int @default(0)
+  prsReviewed              Int @default(0)
+  workItemsAssigned        Int @default(0)
+  workItemsCreated         Int @default(0)
+
+  reposMostActive Json @default("[]")
+
+  pullRequests PullRequest[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, year])
+  @@index([year])
+}
+
+model PullRequest {
+  id                 String            @id @default(uuid())
+  closedDate         DateTime
+  codeReviewAzureId  String
+  pullRequestAzureId String
+  repositoryAzureId  String
+  repositoryName     String
+  repositoryUrl      String
+  status             PullRequestStatus
+  title              String
+
+  yearlyStatsId String
+  yearlyStats   YearlyStats @relation(fields: [yearlyStatsId], references: [id])
+
+  @@index([yearlyStatsId])
+  @@index([closedDate])
 }
