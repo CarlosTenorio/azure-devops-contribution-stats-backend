@@ -32,11 +32,11 @@ model Company {
 }
 
 model User {
-  id     String       @id @default(uuid())
+  id     String        @id @default(uuid())
   name   String?
-  email  String       @unique
-  stats  YearlyStats?
-  status UserStatus   @default(PENDING_TO_ACTIVATE)
+  email  String        @unique
+  stats  YearlyStats[]
+  status UserStatus    @default(PENDING_TO_ACTIVATE)
 
   companyId String
   company   Company @relation(fields: [companyId], references: [id])
