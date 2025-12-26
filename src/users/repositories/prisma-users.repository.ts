@@ -1,10 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { Prisma, User, UserStatus } from 'src/prisma/generated/client';
-import { PrismaService } from '../prisma/prisma.service';
+import { PrismaService } from '../../prisma/prisma.service';
+import { IUsersRepository } from './users.repository';
 
 @Injectable()
-export class UsersRepository {
-  constructor(private readonly prisma: PrismaService) {}
+export class PrismaUsersRepository extends IUsersRepository {
+  constructor(private readonly prisma: PrismaService) {
+    super();
+  }
 
   async findAll(): Promise<User[]> {
     return this.prisma.user.findMany({

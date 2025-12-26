@@ -6,11 +6,11 @@ import {
 import { User, UserStatus } from '../prisma/generated/client';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { UsersRepository } from './users.repository';
+import { IUsersRepository } from './repositories/users.repository';
 
 @Injectable()
 export class UsersService {
-  constructor(private readonly usersRepository: UsersRepository) {}
+  constructor(private readonly usersRepository: IUsersRepository) {}
 
   async findAll(): Promise<User[]> {
     return this.usersRepository.findAll();
