@@ -4,9 +4,16 @@ import { PrismaModule } from './prisma/prisma.module';
 import { UsersModule } from './users/users.module';
 import { CompaniesModule } from './companies/companies.module';
 import { TeamsModule } from './teams/teams.module';
+import { StatsModule } from './stats/stats.module';
 
 @Module({
-  imports: [PrismaModule, UsersModule, CompaniesModule, TeamsModule],
+  imports: [
+    PrismaModule,
+    UsersModule,
+    CompaniesModule,
+    TeamsModule,
+    StatsModule,
+  ],
   providers: [AppService],
 })
 export class AppModule {}
