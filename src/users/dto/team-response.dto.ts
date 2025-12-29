@@ -7,10 +7,7 @@ export class TeamResponseDto {
   })
   id: string;
 
-  @ApiProperty({
-    description: 'Team name',
-    example: 'Development Team',
-  })
+  @ApiProperty({ description: 'Team name', example: 'Development Team' })
   name: string;
 
   @ApiProperty({
@@ -19,13 +16,9 @@ export class TeamResponseDto {
   })
   companyId: string;
 
-  @ApiProperty({
-    description: 'Team creation timestamp',
-  })
+  @ApiProperty({ description: 'Team creation timestamp' })
   createdAt: Date;
 
-  @ApiProperty({
-    description: 'Team last update timestamp',
-  })
+  @ApiProperty({ description: 'Team last update timestamp' })
   updatedAt: Date;
 }

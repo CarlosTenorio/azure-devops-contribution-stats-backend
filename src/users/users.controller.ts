@@ -20,9 +20,14 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { UserStatus } from '@prisma/client';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
-import { UserResponseDto } from './dto/user-response.dto';
+import {
+  GetResponseUserDto,
+  GetResponseUsersDto,
+  PostResponseUsersDto,
+  PutResponseUsersDto,
+} from './dto';
+import { PostBodyUsersDto } from './dto/post/post-body-users.dto';
+import { PutBodyUsersDto } from './dto/put/put-body-users.dto';
 import { UsersService } from './users.service';
 
 @ApiTags('Users')
@@ -35,28 +40,10 @@ export class UsersController {
   @ApiResponse({
     status: 200,
     description: 'List of all users',
-    type: [UserResponseDto],
+    type: [GetResponseUsersDto],
   })
-  async findAll(): Promise<any[]> {
+  async findAll(): Promise<GetResponseUsersDto[]> {
     return this.usersService.findAll();
-  }
-
-  @Get('by-company/:companyId')
-  @ApiOperation({ summary: 'Get users by company ID' })
-  @ApiParam({
-    name: 'companyId',
-    description: 'Company ID',
-    example: '123e4567-e89b-12d3-a456-426614174000',
-  })
-  @ApiResponse({
-    status: 200,
-    description: 'List of users in the company',
-    type: [UserResponseDto],
-  })
-  async findByCompanyId(
-    @Param('companyId') companyId: string,
-  ): Promise<UserResponseDto[]> {
-    return this.usersService.findByCompanyId(companyId);
   }
 
   @Get('by-team/:teamId')
@@ -69,11 +56,11 @@ export class UsersController {
   @ApiResponse({
     status: 200,
     description: 'List of users in the team',
-    type: [UserResponseDto],
+    type: [GetResponseUsersDto],
   })
   async findByTeamId(
     @Param('teamId') teamId: string,
-  ): Promise<UserResponseDto[]> {
+  ): Promise<GetResponseUsersDto[]> {
     return this.usersService.findByTeamId(teamId);
   }
 
@@ -87,13 +74,15 @@ export class UsersController {
   @ApiResponse({
     status: 200,
     description: 'User found',
-    type: UserResponseDto,
+    type: GetResponseUserDto,
   })
   @ApiResponse({
     status: 404,
     description: 'User not found',
   })
-  async findByEmail(@Query('email') email: string): Promise<UserResponseDto> {
+  async findByEmail(
+    @Query('email') email: string,
+  ): Promise<GetResponseUserDto> {
     return this.usersService.findByEmail(email);
   }
 
@@ -107,35 +96,26 @@ export class UsersController {
   @ApiResponse({
     status: 200,
     description: 'User found',
-    type: UserResponseDto,
+    type: GetResponseUserDto,
   })
-  @ApiResponse({
-    status: 404,
-    description: 'User not found',
-  })
+  @ApiResponse({ status: 404, description: 'User not found' })
   async findById(@Param('id') id: string) {
     return this.usersService.findById(id);
   }
 
   @Post()
   @ApiOperation({ summary: 'Create a new user' })
-  @ApiBody({ type: CreateUserDto })
+  @ApiBody({ type: PostBodyUsersDto })
   @ApiResponse({
     status: 201,
     description: 'User created successfully',
-    type: UserResponseDto,
+    type: PostResponseUsersDto,
   })
-  @ApiResponse({
-    status: 400,
-    description: 'Invalid input',
-  })
-  @ApiResponse({
-    status: 409,
-    description: 'User with email already exists',
-  })
+  @ApiResponse({ status: 400, description: 'Invalid input' })
+  @ApiResponse({ status: 409, description: 'User with email already exists' })
   async create(
     @Body(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }))
-    createUserDto: CreateUserDto,
+    createUserDto: PostBodyUsersDto,
   ) {
     return this.usersService.create(createUserDto);
   }
@@ -147,28 +127,19 @@ export class UsersController {
     description: 'User ID',
     example: '123e4567-e89b-12d3-a456-426614174000',
   })
-  @ApiBody({ type: UpdateUserDto })
+  @ApiBody({ type: PutBodyUsersDto })
   @ApiResponse({
     status: 200,
     description: 'User updated successfully',
-    type: UserResponseDto,
+    type: PutResponseUsersDto,
   })
-  @ApiResponse({
-    status: 400,
-    description: 'Invalid input',
-  })
-  @ApiResponse({
-    status: 404,
-    description: 'User not found',
-  })
-  @ApiResponse({
-    status: 409,
-    description: 'User with email already exists',
-  })
+  @ApiResponse({ status: 400, description: 'Invalid input' })
+  @ApiResponse({ status: 404, description: 'User not found' })
+  @ApiResponse({ status: 409, description: 'User with email already exists' })
   async update(
     @Param('id') id: string,
     @Body(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }))
-    updateUserDto: UpdateUserDto,
+    updateUserDto: PutBodyUsersDto,
   ) {
     return this.usersService.update(id, updateUserDto);
   }
@@ -196,12 +167,9 @@ export class UsersController {
   @ApiResponse({
     status: 200,
     description: 'User status updated successfully',
-    type: UserResponseDto,
+    type: GetResponseUserDto,
   })
-  @ApiResponse({
-    status: 404,
-    description: 'User not found',
-  })
+  @ApiResponse({ status: 404, description: 'User not found' })
   async updateStatus(
     @Param('id') id: string,
     @Body('status') status: UserStatus,
@@ -217,14 +185,8 @@ export class UsersController {
     description: 'User ID',
     example: '123e4567-e89b-12d3-a456-426614174000',
   })
-  @ApiResponse({
-    status: 204,
-    description: 'User deleted successfully',
-  })
-  @ApiResponse({
-    status: 404,
-    description: 'User not found',
-  })
+  @ApiResponse({ status: 204, description: 'User deleted successfully' })
+  @ApiResponse({ status: 404, description: 'User not found' })
   async delete(@Param('id') id: string) {
     await this.usersService.delete(id);
   }

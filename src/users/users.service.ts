@@ -4,20 +4,24 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { User, UserStatus } from '@prisma/client';
-import { UserResponseDto } from './dto';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
+import {
+  GetResponseUserDto,
+  GetResponseUsersDto,
+  PostResponseUsersDto,
+} from './dto';
+import { PostBodyUsersDto } from './dto/post/post-body-users.dto';
+import { PutBodyUsersDto } from './dto/put/put-body-users.dto';
 import { IUsersRepository } from './repositories/users.repository';
 
 @Injectable()
 export class UsersService {
   constructor(private readonly usersRepository: IUsersRepository) {}
 
-  async findAll(): Promise<any[]> {
+  async findAll(): Promise<GetResponseUsersDto[]> {
     return this.usersRepository.findAll();
   }
 
-  async findById(id: string): Promise<User> {
+  async findById(id: string): Promise<GetResponseUserDto> {
     const user = await this.usersRepository.findById(id);
     if (!user) {
       throw new NotFoundException(`User with ID ${id} not found`);
@@ -25,7 +29,7 @@ export class UsersService {
     return user;
   }
 
-  async findByEmail(email: string): Promise<User> {
+  async findByEmail(email: string): Promise<GetResponseUserDto> {
     const user = await this.usersRepository.findByEmail(email);
     if (!user) {
       throw new NotFoundException(`User with email ${email} not found`);
@@ -33,15 +37,11 @@ export class UsersService {
     return user;
   }
 
-  async findByCompanyId(companyId: string): Promise<User[]> {
-    return this.usersRepository.findByCompanyId(companyId);
-  }
-
-  async findByTeamId(teamId: string): Promise<User[]> {
+  async findByTeamId(teamId: string): Promise<GetResponseUsersDto[]> {
     return this.usersRepository.findByTeamId(teamId);
   }
 
-  async create(createUserDto: CreateUserDto): Promise<User> {
+  async create(createUserDto: PostBodyUsersDto): Promise<PostResponseUsersDto> {
     const existingUser = await this.usersRepository.findByEmail(
       createUserDto.email,
     );
@@ -56,18 +56,16 @@ export class UsersService {
       email: createUserDto.email,
       oauthId: createUserDto.oauthId,
       connection: createUserDto.connection,
-      company: {
-        connect: { id: createUserDto.companyId },
-      },
+      ...(createUserDto.companyOwnerUserId && {
+        companyOwner: { connect: { id: createUserDto.companyOwnerUserId } },
+      }),
       ...(createUserDto.teamId && {
-        team: {
-          connect: { id: createUserDto.teamId },
-        },
+        team: { connect: { id: createUserDto.teamId } },
       }),
     });
   }
 
-  async update(id: string, updateUserDto: UpdateUserDto): Promise<User> {
+  async update(id: string, updateUserDto: PutBodyUsersDto): Promise<User> {
     await this.findById(id);
 
     // Check if email is being changed and if it's already taken

@@ -1,15 +1,15 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { BaseUserResponseDto } from './base-user-response.dto';
-import { CompanyResponseDto } from './company-response.dto';
-import { TeamResponseDto } from './team-response.dto';
+import { BaseUserResponseDto } from '../base-user-response.dto';
+import { CompanyResponseDto } from '../company-response.dto';
+import { TeamResponseDto } from '../team-response.dto';
 
-export class GetUsersDto extends BaseUserResponseDto {
+export class PostResponseUsersDto extends BaseUserResponseDto {
   @ApiProperty({
     description: 'Company details',
     type: CompanyResponseDto,
     required: false,
   })
-  company?: CompanyResponseDto;
+  companyOwned?: CompanyResponseDto;
 
   @ApiProperty({
     description: 'Team details',

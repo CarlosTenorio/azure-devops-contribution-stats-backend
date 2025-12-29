@@ -11,9 +11,9 @@ import {
 } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiParam } from '@nestjs/swagger';
 import { CompaniesService } from './companies.service';
-import { CreateCompanyDto } from './dto/create-company.dto';
-import { UpdateCompanyDto } from './dto/update-company.dto';
-import { DetailedCompanyResponseDto } from './dto/detailed-company-response.dto';
+import { PostBodyCompaniesDto } from './dto/post-body-companies.dto';
+import { PutBodyCompaniesDto } from './dto/put-body-companies.dto';
+import { GetCompaniesDto } from './dto/get-companies.dto';
 
 @ApiTags('Companies')
 @Controller('companies')
@@ -25,13 +25,13 @@ export class CompaniesController {
   @ApiResponse({
     status: 201,
     description: 'Company created successfully',
-    type: DetailedCompanyResponseDto,
+    type: GetCompaniesDto,
   })
   @ApiResponse({ status: 409, description: 'Company name already exists' })
   async create(
-    @Body() createCompanyDto: CreateCompanyDto,
-  ): Promise<DetailedCompanyResponseDto> {
-    return this.companiesService.create(createCompanyDto);
+    @Body() PostBodyCompaniesDto: PostBodyCompaniesDto,
+  ): Promise<GetCompaniesDto> {
+    return this.companiesService.create(PostBodyCompaniesDto);
   }
 
   @Get()
@@ -39,9 +39,9 @@ export class CompaniesController {
   @ApiResponse({
     status: 200,
     description: 'List of all companies',
-    type: [DetailedCompanyResponseDto],
+    type: [GetCompaniesDto],
   })
-  async findAll(): Promise<DetailedCompanyResponseDto[]> {
+  async findAll(): Promise<GetCompaniesDto[]> {
     return this.companiesService.findAll();
   }
 
@@ -51,10 +51,10 @@ export class CompaniesController {
   @ApiResponse({
     status: 200,
     description: 'Company found',
-    type: DetailedCompanyResponseDto,
+    type: GetCompaniesDto,
   })
   @ApiResponse({ status: 404, description: 'Company not found' })
-  async findOne(@Param('id') id: string): Promise<DetailedCompanyResponseDto> {
+  async findOne(@Param('id') id: string): Promise<GetCompaniesDto> {
     return this.companiesService.findById(id);
   }
 
@@ -64,15 +64,15 @@ export class CompaniesController {
   @ApiResponse({
     status: 200,
     description: 'Company updated successfully',
-    type: DetailedCompanyResponseDto,
+    type: GetCompaniesDto,
   })
   @ApiResponse({ status: 404, description: 'Company not found' })
   @ApiResponse({ status: 409, description: 'Company name already exists' })
   async update(
     @Param('id') id: string,
-    @Body() updateCompanyDto: UpdateCompanyDto,
-  ): Promise<DetailedCompanyResponseDto> {
-    return this.companiesService.update(id, updateCompanyDto);
+    @Body() PutBodyCompaniesDto: PutBodyCompaniesDto,
+  ): Promise<GetCompaniesDto> {
+    return this.companiesService.update(id, PutBodyCompaniesDto);
   }
 
   @Delete(':id')

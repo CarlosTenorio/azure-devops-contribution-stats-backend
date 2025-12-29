@@ -8,38 +8,47 @@ datasource db {
 }
 
 model Company {
-  id        String   @id @default(uuid())
-  name      String
+  id   String @id @default(uuid())
+  name String
+
+  teams Team[]
+
+  ownerUser   User?   @relation("CompanyOwner")
+  ownerUserId String? @unique
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  teams     Team[]
-  users     User[]
 }
 
 model User {
-  id         String        @id @default(uuid())
+  id         String     @id @default(uuid())
   name       String?
-  email      String        @unique
-  status     UserStatus    @default(PENDING_TO_ACTIVATE)
-  companyId  String
-  teamId     String?
-  createdAt  DateTime      @default(now())
-  updatedAt  DateTime      @updatedAt
+  email      String     @unique
+  status     UserStatus @default(PENDING_TO_ACTIVATE)
   connection String
-  oauthId    String        @unique
-  company    Company       @relation(fields: [companyId], references: [id])
-  team       Team?         @relation(fields: [teamId], references: [id])
-  stats      YearlyStats[]
+  oauthId    String     @unique
+
+  team   Team?   @relation(fields: [teamId], references: [id])
+  teamId String?
+
+  companyOwner Company? @relation("CompanyOwner", fields: [id], references: [ownerUserId])
+
+  stats YearlyStats[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Team {
-  id        String   @id @default(uuid())
+  id        String @id @default(uuid())
   name      String
   companyId String
+
+  company Company @relation(fields: [companyId], references: [id])
+  users   User[]
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  company   Company  @relation(fields: [companyId], references: [id])
-  users     User[]
 }
 
 model YearlyStats {
@@ -53,10 +62,11 @@ model YearlyStats {
   workItemsAssigned        Int           @default(0)
   workItemsCreated         Int           @default(0)
   reposMostActive          Json          @default("[]")
-  createdAt                DateTime      @default(now())
-  updatedAt                DateTime      @updatedAt
   pullRequests             PullRequest[]
   user                     User          @relation(fields: [userId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@unique([userId, year])
   @@index([year])

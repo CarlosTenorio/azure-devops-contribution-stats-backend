@@ -1,6 +1,9 @@
 export { BaseUserResponseDto } from './base-user-response.dto';
 export { CompanyResponseDto } from './company-response.dto';
-export { CreateUserDto } from './create-user.dto';
-export { UserResponseDto } from './detailed-user-response.dto';
+export { GetResponseUserDto } from './get/get-response-user.dto';
+export { GetResponseUsersDto } from './get/get-response-users.dto';
+export { PostBodyUsersDto } from './post/post-body-users.dto';
+export { PostResponseUsersDto } from './post/post-response-users.dto';
+export { PutBodyUsersDto } from './put/put-body-users.dto';
+export { PutResponseUsersDto } from './put/put-response-user.dto';
 export { TeamResponseDto } from './team-response.dto';
-export { UpdateUserDto } from './update-user.dto';

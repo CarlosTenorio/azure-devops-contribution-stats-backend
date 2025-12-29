@@ -4,8 +4,6 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { Team } from '@prisma/client';
-import { CreateTeamDto } from './dto/create-team.dto';
-import { UpdateTeamDto } from './dto/update-team.dto';
 import { ITeamsRepository } from './repositories/teams.repository';
 
 @Injectable()
@@ -28,7 +26,7 @@ export class TeamsService {
     return this.teamsRepository.findByCompanyId(companyId);
   }
 
-  async create(createTeamDto: CreateTeamDto): Promise<Team> {
+  async create(createTeamDto: any): Promise<Team> {
     const existingTeam = await this.teamsRepository.findByName(
       createTeamDto.name,
     );
@@ -46,7 +44,7 @@ export class TeamsService {
     });
   }
 
-  async update(id: string, updateTeamDto: UpdateTeamDto): Promise<Team> {
+  async update(id: string, updateTeamDto: any): Promise<Team> {
     const team = await this.findById(id);
 
     if (updateTeamDto.name && updateTeamDto.name !== team.name) {

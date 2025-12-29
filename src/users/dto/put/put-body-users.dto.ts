@@ -2,7 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IsEmail, IsEnum, IsOptional, IsString, IsUUID } from 'class-validator';
 import { UserStatus } from '@prisma/client';
 
-export class UpdateUserDto {
+export class PutBodyUsersDto {
   @ApiProperty({
     description: 'Name of the user',
     example: 'John Doe',

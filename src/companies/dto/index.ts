@@ -1,4 +1,4 @@
-export { CreateCompanyDto } from './create-company.dto';
-export { UpdateCompanyDto } from './update-company.dto';
+export { PostBodyCompaniesDto } from './post-body-companies.dto';
+export { PutBodyCompaniesDto } from './put-body-companies.dto';
 export { BaseCompanyResponseDto } from './base-company-response.dto';
-export { DetailedCompanyResponseDto } from './detailed-company-response.dto';
+export { GetCompaniesDto } from './get-companies.dto';

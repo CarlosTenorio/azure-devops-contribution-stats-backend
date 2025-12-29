@@ -10,29 +10,27 @@ export class PrismaCompaniesRepository extends ICompaniesRepository {
   }
 
   async findAll(): Promise<Company[]> {
-    return this.prisma.company.findMany({
-      include: { users: true, teams: true },
-    });
+    return this.prisma.company.findMany({ include: { teams: true } });
   }
 
   async findById(id: string): Promise<Company | null> {
     return this.prisma.company.findUnique({
       where: { id },
-      include: { users: true, teams: true },
+      include: { teams: true },
     });
   }
 
   async findByName(name: string): Promise<Company | null> {
     return this.prisma.company.findFirst({
       where: { name },
-      include: { users: true, teams: true },
+      include: { teams: true },
     });
   }
 
   async create(data: Prisma.CompanyCreateInput): Promise<Company> {
     return this.prisma.company.create({
       data,
-      include: { users: true, teams: true },
+      include: { teams: true },
     });
   }
 
@@ -40,7 +38,7 @@ export class PrismaCompaniesRepository extends ICompaniesRepository {
     return this.prisma.company.update({
       where: { id },
       data,
-      include: { users: true, teams: true },
+      include: { teams: true },
     });
   }
 

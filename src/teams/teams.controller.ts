@@ -1,26 +1,23 @@
 import {
-  Controller,
-  Get,
-  Post,
   Body,
-  Patch,
-  Param,
+  Controller,
   Delete,
+  Get,
   HttpCode,
   HttpStatus,
+  Param,
+  Patch,
+  Post,
   Query,
 } from '@nestjs/common';
 import {
-  ApiTags,
   ApiOperation,
-  ApiResponse,
   ApiParam,
   ApiQuery,
+  ApiResponse,
+  ApiTags,
 } from '@nestjs/swagger';
 import { TeamsService } from './teams.service';
-import { CreateTeamDto } from './dto/create-team.dto';
-import { UpdateTeamDto } from './dto/update-team.dto';
-import { DetailedTeamResponseDto } from './dto/detailed-team-response.dto';
 
 @ApiTags('Teams')
 @Controller('teams')
@@ -32,15 +29,13 @@ export class TeamsController {
   @ApiResponse({
     status: 201,
     description: 'Team created successfully',
-    type: DetailedTeamResponseDto,
+    // type: any,
   })
   @ApiResponse({
     status: 409,
     description: 'Team name already exists in company',
   })
-  async create(
-    @Body() createTeamDto: CreateTeamDto,
-  ): Promise<DetailedTeamResponseDto> {
+  async create(@Body() createTeamDto: any): Promise<any> {
     return this.teamsService.create(createTeamDto);
   }
 
@@ -54,11 +49,9 @@ export class TeamsController {
   @ApiResponse({
     status: 200,
     description: 'List of teams',
-    type: [DetailedTeamResponseDto],
+    // type: [DetailedTeamResponseDto],
   })
-  async findAll(
-    @Query('companyId') companyId?: string,
-  ): Promise<DetailedTeamResponseDto[]> {
+  async findAll(@Query('companyId') companyId?: string): Promise<any[]> {
     if (companyId) {
       return this.teamsService.findByCompanyId(companyId);
     }
@@ -71,10 +64,10 @@ export class TeamsController {
   @ApiResponse({
     status: 200,
     description: 'Team found',
-    type: DetailedTeamResponseDto,
+    // type: DetailedTeamResponseDto,
   })
   @ApiResponse({ status: 404, description: 'Team not found' })
-  async findOne(@Param('id') id: string): Promise<DetailedTeamResponseDto> {
+  async findOne(@Param('id') id: string): Promise<any> {
     return this.teamsService.findById(id);
   }
 
@@ -84,7 +77,7 @@ export class TeamsController {
   @ApiResponse({
     status: 200,
     description: 'Team updated successfully',
-    type: DetailedTeamResponseDto,
+    // type: DetailedTeamResponseDto,
   })
   @ApiResponse({ status: 404, description: 'Team not found' })
   @ApiResponse({
@@ -93,8 +86,8 @@ export class TeamsController {
   })
   async update(
     @Param('id') id: string,
-    @Body() updateTeamDto: UpdateTeamDto,
-  ): Promise<DetailedTeamResponseDto> {
+    @Body() updateTeamDto: any,
+  ): Promise<any> {
     return this.teamsService.update(id, updateTeamDto);
   }
 

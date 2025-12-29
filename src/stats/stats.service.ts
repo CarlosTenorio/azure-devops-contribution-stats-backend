@@ -4,36 +4,31 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { YearlyStats } from '@prisma/client';
-import { CreateStatsDto } from './dto/create-stats.dto';
-import { UpdateStatsDto } from './dto/update-stats.dto';
-import { DetailedStatsResponseDto } from './dto/detailed-stats-response.dto';
 import { IStatsRepository } from './repositories/i-stats.repository';
 
 @Injectable()
 export class StatsService {
   constructor(private readonly statsRepository: IStatsRepository) {}
 
-  private transformStatsToDto(stats: YearlyStats): DetailedStatsResponseDto {
+  private transformStatsToDto(stats: YearlyStats): any {
     return {
       ...stats,
       reposMostActive: Array.isArray(stats.reposMostActive)
         ? (stats.reposMostActive as string[])
         : [],
-    } as DetailedStatsResponseDto;
+    };
   }
 
-  private transformStatsArrayToDto(
-    statsArray: YearlyStats[],
-  ): DetailedStatsResponseDto[] {
+  private transformStatsArrayToDto(statsArray: YearlyStats[]): any[] {
     return statsArray.map((stats) => this.transformStatsToDto(stats));
   }
 
-  async findAll(): Promise<DetailedStatsResponseDto[]> {
+  async findAll(): Promise<any[]> {
     const stats = await this.statsRepository.findAll();
     return this.transformStatsArrayToDto(stats);
   }
 
-  async findById(id: string): Promise<DetailedStatsResponseDto> {
+  async findById(id: string): Promise<any> {
     const stats = await this.statsRepository.findById(id);
     if (!stats) {
       throw new NotFoundException(`Stats with ID ${id} not found`);
@@ -41,27 +36,22 @@ export class StatsService {
     return this.transformStatsToDto(stats);
   }
 
-  async findByUserId(userId: string): Promise<DetailedStatsResponseDto[]> {
+  async findByUserId(userId: string): Promise<any[]> {
     const stats = await this.statsRepository.findByUserId(userId);
     return this.transformStatsArrayToDto(stats);
   }
 
-  async findByYear(year: number): Promise<DetailedStatsResponseDto[]> {
+  async findByYear(year: number): Promise<any[]> {
     const stats = await this.statsRepository.findByYear(year);
     return this.transformStatsArrayToDto(stats);
   }
 
-  async findByUserIdAndYear(
-    userId: string,
-    year: number,
-  ): Promise<DetailedStatsResponseDto | null> {
+  async findByUserIdAndYear(userId: string, year: number): Promise<any | null> {
     const stats = await this.statsRepository.findByUserIdAndYear(userId, year);
     return stats ? this.transformStatsToDto(stats) : null;
   }
 
-  async create(
-    createStatsDto: CreateStatsDto,
-  ): Promise<DetailedStatsResponseDto> {
+  async create(createStatsDto: any): Promise<any> {
     const existingStats = await this.statsRepository.findByUserIdAndYear(
       createStatsDto.userId,
       createStatsDto.year,
@@ -90,10 +80,7 @@ export class StatsService {
     return this.transformStatsToDto(createdStats);
   }
 
-  async update(
-    id: string,
-    updateStatsDto: UpdateStatsDto,
-  ): Promise<DetailedStatsResponseDto> {
+  async update(id: string, updateStatsDto: any): Promise<any> {
     const stats = await this.statsRepository.findById(id);
     if (!stats) {
       throw new NotFoundException(`Stats with ID ${id} not found`);
@@ -138,7 +125,7 @@ export class StatsService {
     return this.transformStatsToDto(updatedStats);
   }
 
-  async remove(id: string): Promise<DetailedStatsResponseDto> {
+  async remove(id: string): Promise<any> {
     const stats = await this.statsRepository.findById(id);
     if (!stats) {
       throw new NotFoundException(`Stats with ID ${id} not found`);

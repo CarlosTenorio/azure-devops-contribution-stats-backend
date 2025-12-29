@@ -1,26 +1,23 @@
 import {
-  Controller,
-  Get,
-  Post,
   Body,
-  Patch,
-  Param,
+  Controller,
   Delete,
+  Get,
   HttpCode,
   HttpStatus,
+  Param,
+  Patch,
+  Post,
   Query,
 } from '@nestjs/common';
 import {
-  ApiTags,
   ApiOperation,
-  ApiResponse,
   ApiParam,
   ApiQuery,
+  ApiResponse,
+  ApiTags,
 } from '@nestjs/swagger';
 import { StatsService } from './stats.service';
-import { CreateStatsDto } from './dto/create-stats.dto';
-import { UpdateStatsDto } from './dto/update-stats.dto';
-import { DetailedStatsResponseDto } from './dto/detailed-stats-response.dto';
 
 @ApiTags('Stats')
 @Controller('stats')
@@ -32,15 +29,13 @@ export class StatsController {
   @ApiResponse({
     status: 201,
     description: 'Stats created successfully',
-    type: DetailedStatsResponseDto,
+    // type: DetailedStatsResponseDto,
   })
   @ApiResponse({
     status: 409,
     description: 'Stats for user and year already exist',
   })
-  async create(
-    @Body() createStatsDto: CreateStatsDto,
-  ): Promise<DetailedStatsResponseDto> {
+  async create(@Body() createStatsDto: any): Promise<any> {
     return this.statsService.create(createStatsDto);
   }
 
@@ -60,12 +55,12 @@ export class StatsController {
   @ApiResponse({
     status: 200,
     description: 'List of stats',
-    type: [DetailedStatsResponseDto],
+    // type: [DetailedStatsResponseDto],
   })
   async findAll(
     @Query('userId') userId?: string,
     @Query('year') year?: string,
-  ): Promise<DetailedStatsResponseDto[]> {
+  ): Promise<any[]> {
     if (userId && year) {
       const stats = await this.statsService.findByUserIdAndYear(
         userId,
@@ -91,10 +86,10 @@ export class StatsController {
   @ApiResponse({
     status: 200,
     description: 'Stats found',
-    type: DetailedStatsResponseDto,
+    // type: DetailedStatsResponseDto,
   })
   @ApiResponse({ status: 404, description: 'Stats not found' })
-  async findOne(@Param('id') id: string): Promise<DetailedStatsResponseDto> {
+  async findOne(@Param('id') id: string): Promise<any> {
     return this.statsService.findById(id);
   }
 
@@ -104,7 +99,7 @@ export class StatsController {
   @ApiResponse({
     status: 200,
     description: 'Stats updated successfully',
-    type: DetailedStatsResponseDto,
+    // type: DetailedStatsResponseDto,
   })
   @ApiResponse({ status: 404, description: 'Stats not found' })
   @ApiResponse({
@@ -113,8 +108,8 @@ export class StatsController {
   })
   async update(
     @Param('id') id: string,
-    @Body() updateStatsDto: UpdateStatsDto,
-  ): Promise<DetailedStatsResponseDto> {
+    @Body() updateStatsDto: any,
+  ): Promise<any> {
     return this.statsService.update(id, updateStatsDto);
   }
 
