@@ -3,7 +3,7 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { Team } from '../prisma/generated/client';
+import { Team } from '@prisma/client';
 import { CreateTeamDto } from './dto/create-team.dto';
 import { UpdateTeamDto } from './dto/update-team.dto';
 import { ITeamsRepository } from './repositories/teams.repository';

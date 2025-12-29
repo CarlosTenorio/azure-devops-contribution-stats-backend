@@ -1,4 +1,4 @@
-import { Prisma, YearlyStats } from 'src/prisma/generated/client';
+import { Prisma, YearlyStats } from '@prisma/client';
 
 export abstract class IStatsRepository {
   abstract findAll(): Promise<YearlyStats[]>;

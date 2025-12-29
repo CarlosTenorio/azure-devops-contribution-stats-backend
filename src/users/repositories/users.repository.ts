@@ -1,4 +1,4 @@
-import { Prisma, User, UserStatus } from 'src/prisma/generated/client';
+import { Prisma, User, UserStatus } from '@prisma/client';
 import { UserResponseDto } from '../dto';
 
 export abstract class IUsersRepository {

@@ -3,7 +3,7 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { YearlyStats } from '../prisma/generated/client';
+import { YearlyStats } from '@prisma/client';
 import { CreateStatsDto } from './dto/create-stats.dto';
 import { UpdateStatsDto } from './dto/update-stats.dto';
 import { DetailedStatsResponseDto } from './dto/detailed-stats-response.dto';

@@ -1,4 +1,4 @@
-import { Prisma, Team } from 'src/prisma/generated/client';
+import { Prisma, Team } from '@prisma/client';
 
 export abstract class ITeamsRepository {
   abstract findAll(): Promise<Team[]>;

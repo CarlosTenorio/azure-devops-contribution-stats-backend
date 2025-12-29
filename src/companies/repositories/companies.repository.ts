@@ -1,4 +1,4 @@
-import { Prisma, Company } from 'src/prisma/generated/client';
+import { Prisma, Company } from '@prisma/client';
 
 export abstract class ICompaniesRepository {
   abstract findAll(): Promise<Company[]>;
