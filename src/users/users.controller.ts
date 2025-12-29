@@ -37,7 +37,7 @@ export class UsersController {
     description: 'List of all users',
     type: [UserResponseDto],
   })
-  async findAll(): Promise<UserResponseDto[]> {
+  async findAll(): Promise<any[]> {
     return this.usersService.findAll();
   }
 

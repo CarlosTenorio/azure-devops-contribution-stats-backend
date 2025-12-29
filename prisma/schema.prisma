@@ -7,79 +7,56 @@ datasource db {
   provider = "postgresql"
 }
 
-enum PullRequestStatus {
-  ABANDONED
-  ACTIVE
-  COMPLETED
-  NOT_SET
-}
-
-enum UserStatus {
-  ACTIVE // Default status when a user accept the invitation to join a company
-  INACTIVE // Status when a user is deactivated by an admin
-  PENDING_TO_ACTIVATE // Status when a user is invited but has not accepted the invitation yet
-}
-
 model Company {
-  id    String @id @default(uuid())
-  name  String
-  users User[]
-
+  id        String   @id @default(uuid())
+  name      String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   teams     Team[]
+  users     User[]
 }
 
 model User {
-  id     String        @id @default(uuid())
-  name   String?
-  email  String        @unique
-  stats  YearlyStats[]
-  status UserStatus    @default(PENDING_TO_ACTIVATE)
-
-  companyId String
-  company   Company @relation(fields: [companyId], references: [id])
-
-  teamId String?
-  team   Team?   @relation(fields: [teamId], references: [id])
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id         String        @id @default(uuid())
+  name       String?
+  email      String        @unique
+  status     UserStatus    @default(PENDING_TO_ACTIVATE)
+  companyId  String
+  teamId     String?
+  createdAt  DateTime      @default(now())
+  updatedAt  DateTime      @updatedAt
+  connection String
+  oauthId    String        @unique
+  company    Company       @relation(fields: [companyId], references: [id])
+  team       Team?         @relation(fields: [teamId], references: [id])
+  stats      YearlyStats[]
 }
 
 model Team {
-  id   String @id @default(uuid())
-  name String
-
+  id        String   @id @default(uuid())
+  name      String
   companyId String
-  company   Company @relation(fields: [companyId], references: [id])
-
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-
-  users User[]
+  company   Company  @relation(fields: [companyId], references: [id])
+  users     User[]
 }
 
 model YearlyStats {
-  id     String @id @default(uuid())
-  userId String
-  user   User   @relation(fields: [userId], references: [id])
-
-  year Int
-
-  commentsRatePerPRPercent Int @default(0)
-  prCommentsMade           Int @default(0)
-  prsClosed                Int @default(0)
-  prsReviewed              Int @default(0)
-  workItemsAssigned        Int @default(0)
-  workItemsCreated         Int @default(0)
-
-  reposMostActive Json @default("[]")
-
-  pullRequests PullRequest[]
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id                       String        @id @default(uuid())
+  userId                   String
+  year                     Int
+  commentsRatePerPRPercent Int           @default(0)
+  prCommentsMade           Int           @default(0)
+  prsClosed                Int           @default(0)
+  prsReviewed              Int           @default(0)
+  workItemsAssigned        Int           @default(0)
+  workItemsCreated         Int           @default(0)
+  reposMostActive          Json          @default("[]")
+  createdAt                DateTime      @default(now())
+  updatedAt                DateTime      @updatedAt
+  pullRequests             PullRequest[]
+  user                     User          @relation(fields: [userId], references: [id])
 
   @@unique([userId, year])
   @@index([year])
@@ -95,10 +72,22 @@ model PullRequest {
   repositoryUrl      String
   status             PullRequestStatus
   title              String
-
-  yearlyStatsId String
-  yearlyStats   YearlyStats @relation(fields: [yearlyStatsId], references: [id])
+  yearlyStatsId      String
+  yearlyStats        YearlyStats       @relation(fields: [yearlyStatsId], references: [id])
 
   @@index([yearlyStatsId])
   @@index([closedDate])
+}
+
+enum PullRequestStatus {
+  ABANDONED
+  ACTIVE
+  COMPLETED
+  NOT_SET
+}
+
+enum UserStatus {
+  ACTIVE
+  INACTIVE
+  PENDING_TO_ACTIVATE
 }

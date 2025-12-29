@@ -48,4 +48,22 @@ export class UpdateUserDto {
   @IsOptional()
   @IsEnum(UserStatus)
   status?: UserStatus;
+
+  @ApiProperty({
+    description: 'OAuth ID from Azure DevOps',
+    example: 'oauth-id-123456',
+    required: false,
+  })
+  @IsOptional()
+  @IsString()
+  oauthId?: string;
+
+  @ApiProperty({
+    description: 'Connection string or identifier',
+    example: 'azure-devops-connection',
+    required: false,
+  })
+  @IsOptional()
+  @IsString()
+  connection?: string;
 }

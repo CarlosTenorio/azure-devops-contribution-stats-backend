@@ -41,4 +41,20 @@ export class CreateUserDto {
   @IsOptional()
   @IsUUID()
   teamId?: string;
+
+  @ApiProperty({
+    description: 'OAuth ID from Azure DevOps',
+    example: 'oauth-id-123456',
+  })
+  @IsNotEmpty()
+  @IsString()
+  oauthId: string;
+
+  @ApiProperty({
+    description: 'Connection string or identifier',
+    example: 'azure-devops-connection',
+  })
+  @IsNotEmpty()
+  @IsString()
+  connection: string;
 }

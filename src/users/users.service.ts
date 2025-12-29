@@ -4,6 +4,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { User, UserStatus } from '../prisma/generated/client';
+import { UserResponseDto } from './dto';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { IUsersRepository } from './repositories/users.repository';
@@ -12,7 +13,7 @@ import { IUsersRepository } from './repositories/users.repository';
 export class UsersService {
   constructor(private readonly usersRepository: IUsersRepository) {}
 
-  async findAll(): Promise<User[]> {
+  async findAll(): Promise<any[]> {
     return this.usersRepository.findAll();
   }
 
@@ -53,6 +54,8 @@ export class UsersService {
     return this.usersRepository.create({
       name: createUserDto.name,
       email: createUserDto.email,
+      oauthId: createUserDto.oauthId,
+      connection: createUserDto.connection,
       company: {
         connect: { id: createUserDto.companyId },
       },

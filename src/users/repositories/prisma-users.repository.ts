@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Prisma, User, UserStatus } from 'src/prisma/generated/client';
 import { PrismaService } from '../../prisma/prisma.service';
+import { UserResponseDto } from '../dto';
 import { IUsersRepository } from './users.repository';
 
 @Injectable()
@@ -9,7 +10,7 @@ export class PrismaUsersRepository extends IUsersRepository {
     super();
   }
 
-  async findAll(): Promise<User[]> {
+  async findAll(): Promise<any[]> {
     return this.prisma.user.findMany({
       include: { company: true, team: true, stats: true },
     });
