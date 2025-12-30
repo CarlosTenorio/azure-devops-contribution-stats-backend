@@ -25,6 +25,14 @@ export class CompaniesService {
   }
 
   async create(postBodyCompaniesDto: PostBodyCompaniesDto): Promise<Company> {
+    const userAlreadyOwnsCompany = await this.companiesRepository.findByOwnerId(
+      postBodyCompaniesDto.ownerUserId,
+    );
+    if (userAlreadyOwnsCompany) {
+      throw new ConflictException(
+        `User with ID '${postBodyCompaniesDto.ownerUserId}' already owns a company`,
+      );
+    }
     return this.companiesRepository.create(postBodyCompaniesDto);
   }
 

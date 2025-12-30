@@ -27,11 +27,15 @@ export class PrismaCompaniesRepository extends ICompaniesRepository {
     });
   }
 
-  async create(data: Prisma.CompanyCreateInput): Promise<Company> {
-    return this.prisma.company.create({
-      data,
+  async findByOwnerId(ownerUserId: string): Promise<Company | null> {
+    return this.prisma.company.findFirst({
+      where: { ownerUserId },
       include: { teams: true },
     });
+  }
+
+  async create(data: Prisma.CompanyCreateInput): Promise<Company> {
+    return this.prisma.company.create({ data, include: { teams: true } });
   }
 
   async update(id: string, data: Prisma.CompanyUpdateInput): Promise<Company> {

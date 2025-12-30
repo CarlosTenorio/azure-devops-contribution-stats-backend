@@ -46,24 +46,6 @@ export class UsersController {
     return this.usersService.findAll();
   }
 
-  @Get('by-team/:teamId')
-  @ApiOperation({ summary: 'Get users by team ID' })
-  @ApiParam({
-    name: 'teamId',
-    description: 'Team ID',
-    example: '123e4567-e89b-12d3-a456-426614174001',
-  })
-  @ApiResponse({
-    status: 200,
-    description: 'List of users in the team',
-    type: [GetResponseUsersDto],
-  })
-  async findByTeamId(
-    @Param('teamId') teamId: string,
-  ): Promise<GetResponseUsersDto[]> {
-    return this.usersService.findByTeamId(teamId);
-  }
-
   @Get('by-email')
   @ApiOperation({ summary: 'Get user by email' })
   @ApiQuery({
@@ -76,10 +58,7 @@ export class UsersController {
     description: 'User found',
     type: GetResponseUserDto,
   })
-  @ApiResponse({
-    status: 404,
-    description: 'User not found',
-  })
+  @ApiResponse({ status: 404, description: 'User not found' })
   async findByEmail(
     @Query('email') email: string,
   ): Promise<GetResponseUserDto> {

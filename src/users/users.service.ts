@@ -38,10 +38,6 @@ export class UsersService {
     return user;
   }
 
-  async findByTeamId(teamId: string): Promise<GetResponseUsersDto[]> {
-    return this.usersRepository.findByTeamId(teamId);
-  }
-
   async create(createUserDto: PostBodyUsersDto): Promise<PostResponseUsersDto> {
     const existingUser = await this.usersRepository.findByEmail(
       createUserDto.email,

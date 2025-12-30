@@ -11,10 +11,24 @@ model Company {
   id   String @id @default(uuid())
   name String
 
-  teams Team[]
+  teams       Team[]
+  invitations Invitation[]
 
   ownerUser   User?   @relation("CompanyOwner", fields: [ownerUserId], references: [id])
   ownerUserId String? @unique
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Invitation {
+  id    String  @id @default(uuid())
+  email String
+  token String  @unique
+  used  Boolean @default(false)
+
+  company   Company? @relation(fields: [companyId], references: [id])
+  companyId String?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -28,12 +42,20 @@ model User {
   connection String
   oauthId    String     @unique
 
-  team   Team?   @relation(fields: [teamId], references: [id])
-  teamId String?
-
   companyOwner Company? @relation("CompanyOwner")
 
   stats YearlyStats[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model UserTeam {
+  id   String @id @default(uuid())
+  name String
+
+  team   Team?   @relation(fields: [teamId], references: [id])
+  teamId String?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -44,8 +66,8 @@ model Team {
   name      String
   companyId String
 
-  company Company @relation(fields: [companyId], references: [id])
-  users   User[]
+  company Company    @relation(fields: [companyId], references: [id])
+  users   UserTeam[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
