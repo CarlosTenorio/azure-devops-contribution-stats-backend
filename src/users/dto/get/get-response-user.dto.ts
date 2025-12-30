@@ -9,8 +9,9 @@ export class GetResponseUserDto extends BaseUserResponseDto {
     description: 'Company details',
     type: CompanyResponseDto,
     required: false,
+    nullable: true,
   })
-  companyOwned?: CompanyResponseDto;
+  companyOwned?: CompanyResponseDto | null;
 
   @ApiProperty({
     description: 'Team details',

@@ -26,6 +26,7 @@ export class UsersService {
     if (!user) {
       throw new NotFoundException(`User with ID ${id} not found`);
     }
+    delete user['teamId'];
     return user;
   }
 

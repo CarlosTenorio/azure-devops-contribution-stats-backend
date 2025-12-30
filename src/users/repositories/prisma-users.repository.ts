@@ -19,7 +19,7 @@ export class PrismaUsersRepository extends IUsersRepository {
   async findById(id: string): Promise<GetResponseUserDto | null> {
     return this.prisma.user.findUnique({
       where: { id },
-      include: { team: true },
+      include: { team: true, companyOwner: true },
     });
   }
 
