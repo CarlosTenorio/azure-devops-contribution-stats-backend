@@ -15,18 +15,30 @@ export class PrismaUsersRepository extends IUsersRepository {
   }
 
   async findById(id: string): Promise<GetResponseUserDto | null> {
-    return this.prisma.user.findUnique({
+    const user = await this.prisma.user.findUnique({
       where: { id },
       include: { companyOwner: true },
     });
+    const userComesFromInvitation =
+      (await this.prisma.invitation.findFirst({
+        where: { email: user?.email },
+      })) !== null;
+    return { ...user, userComesFromInvitation };
   }
 
-  async findByEmail(email: string): Promise<User | null> {
-    return this.prisma.user.findUnique({ where: { email } });
+  async findByEmail(email: string): Promise<GetResponseUserDto | null> {
+    const user = await this.prisma.user.findUnique({
+      where: { email },
+      include: { companyOwner: true },
+    });
+    const userComesFromInvitation =
+      (await this.prisma.invitation.findFirst({
+        where: { email: user?.email },
+      })) !== null;
+    return { ...user, userComesFromInvitation };
   }
 
   async create(data: Prisma.UserCreateInput): Promise<User> {
-    console.log({ data });
     return this.prisma.user.create({ data });
   }
 

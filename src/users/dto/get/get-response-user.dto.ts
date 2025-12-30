@@ -10,4 +10,11 @@ export class GetResponseUserDto extends BaseUserResponseDto {
     nullable: true,
   })
   companyOwned?: CompanyResponseDto | null;
+
+  @ApiProperty({
+    description: 'Indicates if the user was created via an invitation',
+    example: false,
+    required: false,
+  })
+  userComesFromInvitation?: boolean;
 }
