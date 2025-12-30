@@ -4,7 +4,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { Company } from '@prisma/client';
-import { PostBodyCompaniesDto } from './dto/post-body-companies.dto';
+import { PostBodyCompaniesDto } from './dto/post/post-body-companies.dto';
 import { PutBodyCompaniesDto } from './dto/put-body-companies.dto';
 import { ICompaniesRepository } from './repositories/companies.repository';
 
@@ -24,37 +24,28 @@ export class CompaniesService {
     return company;
   }
 
-  async create(PostBodyCompaniesDto: PostBodyCompaniesDto): Promise<Company> {
-    const existingCompany = await this.companiesRepository.findByName(
-      PostBodyCompaniesDto.name,
-    );
-    if (existingCompany) {
-      throw new ConflictException(
-        `Company with name '${PostBodyCompaniesDto.name}' already exists`,
-      );
-    }
-
-    return this.companiesRepository.create(PostBodyCompaniesDto);
+  async create(postBodyCompaniesDto: PostBodyCompaniesDto): Promise<Company> {
+    return this.companiesRepository.create(postBodyCompaniesDto);
   }
 
   async update(
     id: string,
-    PutBodyCompaniesDto: PutBodyCompaniesDto,
+    putBodyCompaniesDto: PutBodyCompaniesDto,
   ): Promise<Company> {
     const company = await this.findById(id);
 
-    if (PutBodyCompaniesDto.name && PutBodyCompaniesDto.name !== company.name) {
+    if (putBodyCompaniesDto.name && putBodyCompaniesDto.name !== company.name) {
       const existingCompany = await this.companiesRepository.findByName(
-        PutBodyCompaniesDto.name,
+        putBodyCompaniesDto.name,
       );
       if (existingCompany && existingCompany.id !== id) {
         throw new ConflictException(
-          `Company with name '${PutBodyCompaniesDto.name}' already exists`,
+          `Company with name '${putBodyCompaniesDto.name}' already exists`,
         );
       }
     }
 
-    return this.companiesRepository.update(id, PutBodyCompaniesDto);
+    return this.companiesRepository.update(id, putBodyCompaniesDto);
   }
 
   async remove(id: string): Promise<Company> {

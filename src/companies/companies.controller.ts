@@ -1,38 +1,25 @@
 import {
-  Controller,
-  Get,
-  Post,
   Body,
-  Patch,
-  Param,
+  Controller,
   Delete,
+  Get,
   HttpCode,
   HttpStatus,
+  Param,
+  Patch,
+  Post,
 } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse, ApiParam } from '@nestjs/swagger';
+import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CompaniesService } from './companies.service';
-import { PostBodyCompaniesDto } from './dto/post-body-companies.dto';
+import { PostResponseCompaniesDto } from './dto';
+import { GetCompaniesDto } from './dto/get/get-companies.dto';
+import { PostBodyCompaniesDto } from './dto/post/post-body-companies.dto';
 import { PutBodyCompaniesDto } from './dto/put-body-companies.dto';
-import { GetCompaniesDto } from './dto/get-companies.dto';
 
 @ApiTags('Companies')
 @Controller('companies')
 export class CompaniesController {
   constructor(private readonly companiesService: CompaniesService) {}
-
-  @Post()
-  @ApiOperation({ summary: 'Create a new company' })
-  @ApiResponse({
-    status: 201,
-    description: 'Company created successfully',
-    type: GetCompaniesDto,
-  })
-  @ApiResponse({ status: 409, description: 'Company name already exists' })
-  async create(
-    @Body() PostBodyCompaniesDto: PostBodyCompaniesDto,
-  ): Promise<GetCompaniesDto> {
-    return this.companiesService.create(PostBodyCompaniesDto);
-  }
 
   @Get()
   @ApiOperation({ summary: 'Get all companies' })
@@ -56,6 +43,20 @@ export class CompaniesController {
   @ApiResponse({ status: 404, description: 'Company not found' })
   async findOne(@Param('id') id: string): Promise<GetCompaniesDto> {
     return this.companiesService.findById(id);
+  }
+
+  @Post()
+  @ApiOperation({ summary: 'Create a new company' })
+  @ApiResponse({
+    status: 201,
+    description: 'Company created successfully',
+    type: PostResponseCompaniesDto,
+  })
+  @ApiResponse({ status: 409, description: 'Company already exists' })
+  async create(
+    @Body() PostBodyCompaniesDto: PostBodyCompaniesDto,
+  ): Promise<PostResponseCompaniesDto> {
+    return this.companiesService.create(PostBodyCompaniesDto);
   }
 
   @Patch(':id')

@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { Prisma, User, UserStatus } from '@prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
 import { IUsersRepository } from './users.repository';
+import { GetResponseUserDto } from '../dto';
 
 @Injectable()
 export class PrismaUsersRepository extends IUsersRepository {
@@ -11,28 +12,28 @@ export class PrismaUsersRepository extends IUsersRepository {
 
   async findAll(): Promise<any[]> {
     return this.prisma.user.findMany({
-      include: { team: true, stats: true },
+      include: { team: true },
     });
   }
 
-  async findById(id: string): Promise<User | null> {
+  async findById(id: string): Promise<GetResponseUserDto | null> {
     return this.prisma.user.findUnique({
       where: { id },
-      include: { team: true, stats: true },
+      include: { team: true },
     });
   }
 
   async findByEmail(email: string): Promise<User | null> {
     return this.prisma.user.findUnique({
       where: { email },
-      include: { team: true, stats: true },
+      include: { team: true },
     });
   }
 
   async findByTeamId(teamId: string): Promise<User[]> {
     return this.prisma.user.findMany({
       where: { teamId },
-      include: { team: true, stats: true },
+      include: { team: true },
     });
   }
 

@@ -13,7 +13,7 @@ model Company {
 
   teams Team[]
 
-  ownerUser   User?   @relation("CompanyOwner")
+  ownerUser   User?   @relation("CompanyOwner", fields: [ownerUserId], references: [id])
   ownerUserId String? @unique
 
   createdAt DateTime @default(now())
@@ -31,7 +31,7 @@ model User {
   team   Team?   @relation(fields: [teamId], references: [id])
   teamId String?
 
-  companyOwner Company? @relation("CompanyOwner", fields: [id], references: [ownerUserId])
+  companyOwner Company? @relation("CompanyOwner")
 
   stats YearlyStats[]
 

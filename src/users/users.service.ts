@@ -56,9 +56,6 @@ export class UsersService {
       email: createUserDto.email,
       oauthId: createUserDto.oauthId,
       connection: createUserDto.connection,
-      ...(createUserDto.companyOwnerUserId && {
-        companyOwner: { connect: { id: createUserDto.companyOwnerUserId } },
-      }),
       ...(createUserDto.teamId && {
         team: { connect: { id: createUserDto.teamId } },
       }),

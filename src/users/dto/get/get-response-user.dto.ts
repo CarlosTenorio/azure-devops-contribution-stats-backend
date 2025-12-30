@@ -2,6 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { BaseUserResponseDto } from '../base-user-response.dto';
 import { CompanyResponseDto } from '../company-response.dto';
 import { TeamResponseDto } from '../team-response.dto';
+import { Stats } from 'fs';
 
 export class GetResponseUserDto extends BaseUserResponseDto {
   @ApiProperty({
@@ -9,7 +10,7 @@ export class GetResponseUserDto extends BaseUserResponseDto {
     type: CompanyResponseDto,
     required: false,
   })
-  company?: CompanyResponseDto;
+  companyOwned?: CompanyResponseDto;
 
   @ApiProperty({
     description: 'Team details',

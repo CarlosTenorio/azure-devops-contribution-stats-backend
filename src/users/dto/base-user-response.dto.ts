@@ -28,13 +28,6 @@ export class BaseUserResponseDto {
   })
   status: UserStatus;
 
-  @ApiProperty({
-    description: 'Team ID',
-    example: '123e4567-e89b-12d3-a456-426614174001',
-    nullable: true,
-  })
-  teamId: string | null;
-
   @ApiProperty({ description: 'Creation timestamp' })
   createdAt: Date;
 
