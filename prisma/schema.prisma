@@ -11,8 +11,9 @@ model Company {
   id   String @id @default(uuid())
   name String
 
-  teams       Team[]
-  invitations Invitation[]
+  invitations         Invitation[]
+  organizationMembers OrganizationMember[]
+  teams               Team[]
 
   ownerUser   User?   @relation("CompanyOwner", fields: [ownerUserId], references: [id])
   ownerUserId String? @unique
@@ -68,6 +69,21 @@ model Team {
 
   company Company    @relation(fields: [companyId], references: [id])
   users   UserTeam[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model OrganizationMember {
+  id          String  @id @default(uuid())
+  azureId     String  @unique
+  displayName String
+  email       String  @unique
+  imageUrl    String?
+  uniqueName  String  @unique
+
+  company   Company? @relation(fields: [companyId], references: [id])
+  companyId String?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
