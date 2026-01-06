@@ -4,11 +4,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { User, UserStatus } from '@prisma/client';
-import {
-  GetResponseUserDto,
-  GetResponseUsersDto,
-  PostResponseUsersDto,
-} from './dto';
+import { GetResponseUserDto, PostResponseUsersDto } from './dto';
 import { PostBodyUsersDto } from './dto/post/post-body-users.dto';
 import { PutBodyUsersDto } from './dto/put/put-body-users.dto';
 import { IUsersRepository } from './repositories/users.repository';
@@ -17,7 +13,7 @@ import { IUsersRepository } from './repositories/users.repository';
 export class UsersService {
   constructor(private readonly usersRepository: IUsersRepository) {}
 
-  async findAll(): Promise<GetResponseUsersDto[]> {
+  async findAll(): Promise<GetResponseUserDto[]> {
     return this.usersRepository.findAll();
   }
 

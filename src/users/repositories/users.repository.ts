@@ -1,8 +1,8 @@
 import { Prisma, User, UserStatus } from '@prisma/client';
-import { GetResponseUserDto, GetResponseUsersDto } from '../dto';
+import { GetResponseUserDto } from '../dto';
 
 export abstract class IUsersRepository {
-  abstract findAll(): Promise<GetResponseUsersDto[]>;
+  abstract findAll(): Promise<GetResponseUserDto[]>;
   abstract findById(id: string): Promise<GetResponseUserDto | null>;
   abstract findByEmail(email: string): Promise<GetResponseUserDto | null>;
   abstract create(data: Prisma.UserCreateInput): Promise<User>;

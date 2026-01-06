@@ -4,6 +4,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { Company } from '@prisma/client';
+import { GetCompanyDto } from './dto';
 import { PostBodyCompaniesDto } from './dto/post/post-body-companies.dto';
 import { PutBodyCompaniesDto } from './dto/put-body-companies.dto';
 import { ICompaniesRepository } from './repositories/companies.repository';
@@ -12,11 +13,11 @@ import { ICompaniesRepository } from './repositories/companies.repository';
 export class CompaniesService {
   constructor(private readonly companiesRepository: ICompaniesRepository) {}
 
-  async findAll(): Promise<Company[]> {
+  async findAll(): Promise<GetCompanyDto[]> {
     return this.companiesRepository.findAll();
   }
 
-  async findById(id: string): Promise<Company> {
+  async findById(id: string): Promise<GetCompanyDto> {
     const company = await this.companiesRepository.findById(id);
     if (!company) {
       throw new NotFoundException(`Company with ID ${id} not found`);

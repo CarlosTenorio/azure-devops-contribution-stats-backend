@@ -12,7 +12,7 @@ import {
 import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CompaniesService } from './companies.service';
 import { PostResponseCompaniesDto } from './dto';
-import { GetCompaniesDto } from './dto/get/get-companies.dto';
+import { GetCompaniesDto } from './dto/detailed-company-response.dto';
 import { PostBodyCompaniesDto } from './dto/post/post-body-companies.dto';
 import { PutBodyCompaniesDto } from './dto/put-body-companies.dto';
 

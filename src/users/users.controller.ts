@@ -22,7 +22,6 @@ import {
 import { UserStatus } from '@prisma/client';
 import {
   GetResponseUserDto,
-  GetResponseUsersDto,
   PostResponseUsersDto,
   PutResponseUsersDto,
 } from './dto';
@@ -40,9 +39,9 @@ export class UsersController {
   @ApiResponse({
     status: 200,
     description: 'List of all users',
-    type: [GetResponseUsersDto],
+    type: [GetResponseUserDto],
   })
-  async findAll(): Promise<GetResponseUsersDto[]> {
+  async findAll(): Promise<GetResponseUserDto[]> {
     return this.usersService.findAll();
   }
 
