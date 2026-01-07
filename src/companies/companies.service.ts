@@ -25,6 +25,11 @@ export class CompaniesService {
     return company;
   }
 
+  async findTeamsByCompanyId(companyId: string): Promise<any[]> {
+    await this.findById(companyId);
+    return this.companiesRepository.findTeamsByCompanyId(companyId);
+  }
+
   async create(postBodyCompaniesDto: PostBodyCompaniesDto): Promise<Company> {
     const userAlreadyOwnsCompany = await this.companiesRepository.findByOwnerId(
       postBodyCompaniesDto.ownerUserId,

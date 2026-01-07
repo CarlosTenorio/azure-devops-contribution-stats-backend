@@ -29,7 +29,6 @@ export class TeamsController {
   @ApiResponse({
     status: 201,
     description: 'Team created successfully',
-    // type: any,
   })
   @ApiResponse({
     status: 409,
@@ -49,7 +48,6 @@ export class TeamsController {
   @ApiResponse({
     status: 200,
     description: 'List of teams',
-    // type: [DetailedTeamResponseDto],
   })
   async findAll(@Query('companyId') companyId?: string): Promise<any[]> {
     if (companyId) {
@@ -64,7 +62,6 @@ export class TeamsController {
   @ApiResponse({
     status: 200,
     description: 'Team found',
-    // type: DetailedTeamResponseDto,
   })
   @ApiResponse({ status: 404, description: 'Team not found' })
   async findOne(@Param('id') id: string): Promise<any> {
@@ -77,7 +74,6 @@ export class TeamsController {
   @ApiResponse({
     status: 200,
     description: 'Team updated successfully',
-    // type: DetailedTeamResponseDto,
   })
   @ApiResponse({ status: 404, description: 'Team not found' })
   @ApiResponse({

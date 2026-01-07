@@ -6,6 +6,7 @@ export abstract class ICompaniesRepository {
   abstract findById(id: string): Promise<GetCompanyDto | null>;
   abstract findByName(name: string): Promise<GetCompanyDto | null>;
   abstract findByOwnerId(ownerId: string): Promise<GetCompanyDto | null>;
+  abstract findTeamsByCompanyId(companyId: string): Promise<any[]>;
   abstract create(data: Prisma.CompanyCreateInput): Promise<Company>;
   abstract createOrganizationMembers(
     companyId: string,

@@ -124,6 +124,11 @@ export class PrismaCompaniesRepository extends ICompaniesRepository {
     };
   }
 
+  async findTeamsByCompanyId(companyId: string): Promise<any[]> {
+    const teams = await this.prisma.team.findMany({ where: { companyId } });
+    return teams;
+  }
+
   async create(data: Prisma.CompanyCreateInput): Promise<Company> {
     return this.prisma.company.create({ data, include: { teams: true } });
   }

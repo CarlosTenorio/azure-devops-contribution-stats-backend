@@ -48,6 +48,19 @@ export class CompaniesController {
     return this.companiesService.findById(id);
   }
 
+  @Get(':id/teams')
+  @ApiOperation({ summary: 'Get teams by Company ID' })
+  @ApiParam({ name: 'id', description: 'Company ID' })
+  @ApiResponse({
+    status: 200,
+    description: 'List of teams for the specified company',
+    // type: GetCompaniesTeamsDto,
+  })
+  @ApiResponse({ status: 404, description: 'Company not found' })
+  async findTeamsByCompanyId(@Param('id') companyId: string): Promise<any[]> {
+    return this.companiesService.findTeamsByCompanyId(companyId);
+  }
+
   @Post()
   @ApiOperation({ summary: 'Create a new company' })
   @ApiResponse({
