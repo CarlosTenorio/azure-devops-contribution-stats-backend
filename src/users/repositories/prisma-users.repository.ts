@@ -17,25 +17,47 @@ export class PrismaUsersRepository extends IUsersRepository {
   async findById(id: string): Promise<GetResponseUserDto | null> {
     const user = await this.prisma.user.findUnique({
       where: { id },
-      include: { companyOwner: true },
+      include: {
+        companyOwner: {
+          select: { id: true, name: true, createdAt: true, updatedAt: true },
+        },
+      },
     });
-    const userComesFromInvitation =
-      (await this.prisma.invitation.findFirst({
-        where: { email: user?.email },
-      })) !== null;
-    return { ...user, userComesFromInvitation };
+    const companyWhereComesInvitation = await this.prisma.invitation.findFirst({
+      where: { email: user?.email },
+      include: {
+        company: {
+          select: { id: true, name: true, createdAt: true, updatedAt: true },
+        },
+      },
+    });
+    return {
+      ...user,
+      companyWhereComesInvitation: companyWhereComesInvitation?.company || null,
+    };
   }
 
   async findByEmail(email: string): Promise<GetResponseUserDto | null> {
     const user = await this.prisma.user.findUnique({
       where: { email },
-      include: { companyOwner: true },
+      include: {
+        companyOwner: {
+          select: { id: true, name: true, createdAt: true, updatedAt: true },
+        },
+      },
     });
-    const userComesFromInvitation =
-      (await this.prisma.invitation.findFirst({
-        where: { email: user?.email },
-      })) !== null;
-    return { ...user, userComesFromInvitation };
+    const companyWhereComesInvitation = await this.prisma.invitation.findFirst({
+      where: { email: user?.email },
+      include: {
+        company: {
+          select: { id: true, name: true, createdAt: true, updatedAt: true },
+        },
+      },
+    });
+    return {
+      ...user,
+      companyWhereComesInvitation: companyWhereComesInvitation?.company || null,
+    };
   }
 
   async create(data: Prisma.UserCreateInput): Promise<User> {

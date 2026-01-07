@@ -11,7 +11,10 @@ import {
 } from '@nestjs/common';
 import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CompaniesService } from './companies.service';
-import { PostResponseCompaniesDto } from './dto';
+import {
+  PostBodyCompaniesOrganizationMembersDto,
+  PostResponseCompaniesDto,
+} from './dto';
 import { GetCompaniesDto } from './dto/detailed-company-response.dto';
 import { PostBodyCompaniesDto } from './dto/post/post-body-companies.dto';
 import { PutBodyCompaniesDto } from './dto/put-body-companies.dto';
@@ -54,9 +57,34 @@ export class CompaniesController {
   })
   @ApiResponse({ status: 409, description: 'Company already exists' })
   async create(
-    @Body() PostBodyCompaniesDto: PostBodyCompaniesDto,
+    @Body() postBodyCompaniesDto: PostBodyCompaniesDto,
   ): Promise<PostResponseCompaniesDto> {
-    return this.companiesService.create(PostBodyCompaniesDto);
+    return this.companiesService.create(postBodyCompaniesDto);
+  }
+
+  @Post(':id/organization-members')
+  @ApiParam({ name: 'id', description: 'Company ID' })
+  @ApiOperation({
+    summary: 'Create new Organization Members on some specific company',
+  })
+  @ApiResponse({
+    status: 201,
+    description: 'Organization Members created successfully',
+    type: PostResponseCompaniesDto,
+  })
+  @ApiResponse({
+    status: 409,
+    description: 'Organization Members already exist',
+  })
+  async createOrganizationMembers(
+    @Param('id') companyId: string,
+    @Body()
+    postBodyCompaniesOrganizationMembersDto: PostBodyCompaniesOrganizationMembersDto,
+  ): Promise<any> {
+    return this.companiesService.createOrganizationMembers(
+      companyId,
+      postBodyCompaniesOrganizationMembersDto,
+    );
   }
 
   @Patch(':id')
@@ -71,9 +99,9 @@ export class CompaniesController {
   @ApiResponse({ status: 409, description: 'Company name already exists' })
   async update(
     @Param('id') id: string,
-    @Body() PutBodyCompaniesDto: PutBodyCompaniesDto,
+    @Body() putBodyCompaniesDto: PutBodyCompaniesDto,
   ): Promise<GetCompaniesDto> {
-    return this.companiesService.update(id, PutBodyCompaniesDto);
+    return this.companiesService.update(id, putBodyCompaniesDto);
   }
 
   @Delete(':id')

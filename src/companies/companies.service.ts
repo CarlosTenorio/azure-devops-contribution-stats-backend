@@ -4,7 +4,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { Company } from '@prisma/client';
-import { GetCompanyDto } from './dto';
+import { GetCompanyDto, PostBodyCompaniesOrganizationMembersDto } from './dto';
 import { PostBodyCompaniesDto } from './dto/post/post-body-companies.dto';
 import { PutBodyCompaniesDto } from './dto/put-body-companies.dto';
 import { ICompaniesRepository } from './repositories/companies.repository';
@@ -37,10 +37,20 @@ export class CompaniesService {
     return this.companiesRepository.create(postBodyCompaniesDto);
   }
 
+  async createOrganizationMembers(
+    companyId: string,
+    postBodyCompaniesOrganizationMembersDto: PostBodyCompaniesOrganizationMembersDto,
+  ): Promise<any> {
+    return this.companiesRepository.createOrganizationMembers(
+      companyId,
+      postBodyCompaniesOrganizationMembersDto,
+    );
+  }
+
   async update(
     id: string,
     putBodyCompaniesDto: PutBodyCompaniesDto,
-  ): Promise<Company> {
+  ): Promise<any> {
     const company = await this.findById(id);
 
     if (putBodyCompaniesDto.name && putBodyCompaniesDto.name !== company.name) {

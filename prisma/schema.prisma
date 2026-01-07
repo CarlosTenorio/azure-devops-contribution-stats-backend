@@ -78,7 +78,6 @@ model OrganizationMember {
   id          String  @id @default(uuid())
   azureId     String  @unique
   displayName String
-  email       String  @unique
   imageUrl    String?
   uniqueName  String  @unique
 
