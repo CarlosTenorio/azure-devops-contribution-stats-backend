@@ -1,5 +1,9 @@
 import { Company, Prisma } from '@prisma/client';
-import { GetCompanyDto, PostBodyCompaniesOrganizationMembersDto } from '../dto';
+import {
+  GetCompanyDto,
+  PostBodyCompaniesOrganizationMembersDto,
+  PostBodyCompaniesTeamDto,
+} from '../dto';
 
 export abstract class ICompaniesRepository {
   abstract findAll(): Promise<GetCompanyDto[]>;
@@ -11,6 +15,10 @@ export abstract class ICompaniesRepository {
   abstract createOrganizationMembers(
     companyId: string,
     data: PostBodyCompaniesOrganizationMembersDto,
+  ): Promise<any>;
+  abstract createTeamForCompany(
+    companyId: string,
+    data: PostBodyCompaniesTeamDto,
   ): Promise<any>;
   abstract update(id: string, data: Prisma.CompanyUpdateInput): Promise<any>;
   abstract delete(id: string): Promise<Company>;

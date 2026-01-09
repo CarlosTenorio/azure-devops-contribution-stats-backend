@@ -1,7 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { Company, Prisma } from '@prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
-import { GetCompanyDto, PostBodyCompaniesOrganizationMembersDto } from '../dto';
+import {
+  GetCompanyDto,
+  PostBodyCompaniesOrganizationMembersDto,
+  PostBodyCompaniesTeamDto,
+} from '../dto';
 import { ICompaniesRepository } from './companies.repository';
 
 @Injectable()
@@ -170,6 +174,13 @@ export class PrismaCompaniesRepository extends ICompaniesRepository {
     return {
       count: results.reduce((sum, result) => sum + result.count, 0),
     };
+  }
+
+  async createTeamForCompany(
+    companyId: string,
+    data: PostBodyCompaniesTeamDto,
+  ): Promise<any> {
+    return this.prisma.team.create({ data: { ...data, companyId } });
   }
 
   private async executeWithRetry<T>(

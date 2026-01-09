@@ -4,7 +4,11 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { Company } from '@prisma/client';
-import { GetCompanyDto, PostBodyCompaniesOrganizationMembersDto } from './dto';
+import {
+  GetCompanyDto,
+  PostBodyCompaniesOrganizationMembersDto,
+  PostBodyCompaniesTeamDto,
+} from './dto';
 import { PostBodyCompaniesDto } from './dto/post/post-body-companies.dto';
 import { PutBodyCompaniesDto } from './dto/put-body-companies.dto';
 import { ICompaniesRepository } from './repositories/companies.repository';
@@ -49,6 +53,16 @@ export class CompaniesService {
     return this.companiesRepository.createOrganizationMembers(
       companyId,
       postBodyCompaniesOrganizationMembersDto,
+    );
+  }
+
+  async createTeamForCompany(
+    companyId: string,
+    postBodyCompaniesTeamDto: PostBodyCompaniesTeamDto,
+  ): Promise<any> {
+    return this.companiesRepository.createTeamForCompany(
+      companyId,
+      postBodyCompaniesTeamDto,
     );
   }
 

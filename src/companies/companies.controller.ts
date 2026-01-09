@@ -13,6 +13,7 @@ import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CompaniesService } from './companies.service';
 import {
   PostBodyCompaniesOrganizationMembersDto,
+  PostBodyCompaniesTeamDto,
   PostResponseCompaniesDto,
 } from './dto';
 import { GetCompaniesDto } from './dto/detailed-company-response.dto';
@@ -59,6 +60,22 @@ export class CompaniesController {
   @ApiResponse({ status: 404, description: 'Company not found' })
   async findTeamsByCompanyId(@Param('id') companyId: string): Promise<any[]> {
     return this.companiesService.findTeamsByCompanyId(companyId);
+  }
+
+  @Post(':id/teams')
+  @ApiOperation({ summary: 'Create a new team for a specific company' })
+  @ApiParam({ name: 'id', description: 'Company ID' })
+  @ApiResponse({
+    status: 201,
+    description: 'Team created successfully',
+    // type: PostResponseTeamsDto,
+  })
+  @ApiResponse({ status: 404, description: 'Company not found' })
+  async createTeamForCompany(
+    @Param('id') companyId: string,
+    @Body() body: PostBodyCompaniesTeamDto,
+  ): Promise<any> {
+    return this.companiesService.createTeamForCompany(companyId, body);
   }
 
   @Post()
