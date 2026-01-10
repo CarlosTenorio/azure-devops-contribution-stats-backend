@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { Prisma, Team } from '@prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
 import { ITeamsRepository } from './teams.repository';
+import { PatchBodyTeamsDto } from '../dto/patch';
 
 @Injectable()
 export class PrismaTeamsRepository extends ITeamsRepository {
@@ -43,12 +44,8 @@ export class PrismaTeamsRepository extends ITeamsRepository {
     });
   }
 
-  async update(id: string, data: Prisma.TeamUpdateInput): Promise<Team> {
-    return this.prisma.team.update({
-      where: { id },
-      data,
-      include: { company: true, users: true },
-    });
+  async update(id: string, data: PatchBodyTeamsDto): Promise<any> {
+    return this.prisma.team.update({ where: { id }, data });
   }
 
   async delete(id: string): Promise<Team> {

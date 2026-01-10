@@ -8,6 +8,7 @@ import {
   Param,
   Patch,
   Post,
+  Put,
   Query,
 } from '@nestjs/common';
 import {
@@ -17,6 +18,7 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
+import { PatchBodyTeamsDto } from './dto/patch';
 import { TeamsService } from './teams.service';
 
 @ApiTags('Teams')
@@ -68,7 +70,7 @@ export class TeamsController {
     return this.teamsService.findById(id);
   }
 
-  @Patch(':id')
+  @Put(':id')
   @ApiOperation({ summary: 'Update team by ID' })
   @ApiParam({ name: 'id', description: 'Team ID' })
   @ApiResponse({
@@ -82,8 +84,9 @@ export class TeamsController {
   })
   async update(
     @Param('id') id: string,
-    @Body() updateTeamDto: any,
+    @Body() updateTeamDto: PatchBodyTeamsDto,
   ): Promise<any> {
+    console.log('UpdateTeamDto:', id);
     return this.teamsService.update(id, updateTeamDto);
   }
 
