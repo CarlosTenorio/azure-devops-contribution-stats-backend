@@ -6,4 +6,3 @@ export { PostResponseUsersDto } from './post/post-response-users.dto';
 export { PutBodyUsersDto } from './put/put-body-users.dto';
 export { PutResponseUsersDto } from './put/put-response-user.dto';
 export { TeamResponseDto } from './team-response.dto';
-export { UserTeamResponseDto } from './user-team-response.dto';

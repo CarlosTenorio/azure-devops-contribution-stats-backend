@@ -29,6 +29,7 @@ export class PrismaCompaniesRepository extends ICompaniesRepository {
             name: team.name,
             createdAt: team.createdAt,
             updatedAt: team.updatedAt,
+            expanded: team.expanded,
           })),
           organizationMembers: company.organizationMembers.map((member) => ({
             id: member.id,
@@ -47,8 +48,12 @@ export class PrismaCompaniesRepository extends ICompaniesRepository {
   async findById(id: string): Promise<GetCompanyDto | null> {
     const company = await this.prisma.company.findUnique({
       where: { id },
-      include: { teams: true, organizationMembers: true },
+      include: {
+        teams: { include: { users: true } },
+        organizationMembers: true,
+      },
     });
+
     return <GetCompanyDto>{
       createdAt: company.createdAt,
       id: company.id,
@@ -58,6 +63,14 @@ export class PrismaCompaniesRepository extends ICompaniesRepository {
         name: team.name,
         createdAt: team.createdAt,
         updatedAt: team.updatedAt,
+        expanded: team.expanded,
+        users: team.users.map((user) => ({
+          azureId: user.azureId,
+          displayName: user.displayName,
+          id: user.id,
+          imageUrl: user.imageUrl,
+          uniqueName: user.uniqueName,
+        })),
       })),
       organizationMembers: company.organizationMembers.map((member) => ({
         id: member.id,
@@ -75,7 +88,10 @@ export class PrismaCompaniesRepository extends ICompaniesRepository {
   async findByName(name: string): Promise<GetCompanyDto | null> {
     const company = await this.prisma.company.findFirst({
       where: { name },
-      include: { teams: true, organizationMembers: true },
+      include: {
+        teams: { include: { users: true } },
+        organizationMembers: true,
+      },
     });
     return <GetCompanyDto>{
       createdAt: company.createdAt,
@@ -86,6 +102,14 @@ export class PrismaCompaniesRepository extends ICompaniesRepository {
         name: team.name,
         createdAt: team.createdAt,
         updatedAt: team.updatedAt,
+        expanded: team.expanded,
+        users: team.users.map((user) => ({
+          azureId: user.azureId,
+          displayName: user.displayName,
+          id: user.id,
+          imageUrl: user.imageUrl,
+          uniqueName: user.uniqueName,
+        })),
       })),
       organizationMembers: company.organizationMembers.map((member) => ({
         id: member.id,
@@ -103,7 +127,10 @@ export class PrismaCompaniesRepository extends ICompaniesRepository {
   async findByOwnerId(ownerUserId: string): Promise<GetCompanyDto | null> {
     const company = await this.prisma.company.findFirst({
       where: { ownerUserId },
-      include: { teams: true, organizationMembers: true },
+      include: {
+        teams: { include: { users: true } },
+        organizationMembers: true,
+      },
     });
     return <GetCompanyDto>{
       createdAt: company.createdAt,
@@ -114,6 +141,14 @@ export class PrismaCompaniesRepository extends ICompaniesRepository {
         name: team.name,
         createdAt: team.createdAt,
         updatedAt: team.updatedAt,
+        expanded: team.expanded,
+        users: team.users.map((user) => ({
+          azureId: user.azureId,
+          displayName: user.displayName,
+          id: user.id,
+          imageUrl: user.imageUrl,
+          uniqueName: user.uniqueName,
+        })),
       })),
       organizationMembers: company.organizationMembers.map((member) => ({
         id: member.id,
@@ -171,9 +206,7 @@ export class PrismaCompaniesRepository extends ICompaniesRepository {
       results.push(result);
     }
 
-    return {
-      count: results.reduce((sum, result) => sum + result.count, 0),
-    };
+    return { count: results.reduce((sum, result) => sum + result.count, 0) };
   }
 
   async createTeamForCompany(

@@ -54,6 +54,7 @@ export class PrismaUsersRepository extends IUsersRepository {
         },
       },
     });
+
     return {
       ...user,
       companyWhereComesInvitation: companyWhereComesInvitation?.company || null,

@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { TeamResponseDto } from 'src/users/dto';
 import { BaseCompanyResponseDto } from '../base-company-response.dto';
 import { OrganizationMemberDto } from '../organization-member.dto';
+import { TeamResponseDto } from '../team-response.dto';
 
 export class GetCompanyDto extends BaseCompanyResponseDto {
   @ApiProperty({

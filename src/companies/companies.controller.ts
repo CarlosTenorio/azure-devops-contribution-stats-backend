@@ -12,11 +12,11 @@ import {
 import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CompaniesService } from './companies.service';
 import {
+  GetCompanyDto,
   PostBodyCompaniesOrganizationMembersDto,
   PostBodyCompaniesTeamDto,
   PostResponseCompaniesDto,
 } from './dto';
-import { GetCompaniesDto } from './dto/detailed-company-response.dto';
 import { PostBodyCompaniesDto } from './dto/post/post-body-companies.dto';
 import { PutBodyCompaniesDto } from './dto/put-body-companies.dto';
 
@@ -30,9 +30,9 @@ export class CompaniesController {
   @ApiResponse({
     status: 200,
     description: 'List of all companies',
-    type: [GetCompaniesDto],
+    type: [GetCompanyDto],
   })
-  async findAll(): Promise<GetCompaniesDto[]> {
+  async findAll(): Promise<GetCompanyDto[]> {
     return this.companiesService.findAll();
   }
 
@@ -42,10 +42,10 @@ export class CompaniesController {
   @ApiResponse({
     status: 200,
     description: 'Company found',
-    type: GetCompaniesDto,
+    type: GetCompanyDto,
   })
   @ApiResponse({ status: 404, description: 'Company not found' })
-  async findOne(@Param('id') id: string): Promise<GetCompaniesDto> {
+  async findOne(@Param('id') id: string): Promise<GetCompanyDto> {
     return this.companiesService.findById(id);
   }
 
@@ -123,14 +123,14 @@ export class CompaniesController {
   @ApiResponse({
     status: 200,
     description: 'Company updated successfully',
-    type: GetCompaniesDto,
+    type: GetCompanyDto,
   })
   @ApiResponse({ status: 404, description: 'Company not found' })
   @ApiResponse({ status: 409, description: 'Company name already exists' })
   async update(
     @Param('id') id: string,
     @Body() putBodyCompaniesDto: PutBodyCompaniesDto,
-  ): Promise<GetCompaniesDto> {
+  ): Promise<GetCompanyDto> {
     return this.companiesService.update(id, putBodyCompaniesDto);
   }
 
