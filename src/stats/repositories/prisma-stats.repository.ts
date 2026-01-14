@@ -11,7 +11,7 @@ export class PrismaStatsRepository extends IStatsRepository {
 
   async findAll(): Promise<YearlyStats[]> {
     return this.prisma.yearlyStats.findMany({
-      include: { user: true, pullRequests: true },
+      include: { organizationMember: true, pullRequests: true },
       orderBy: [{ year: 'desc' }, { createdAt: 'desc' }],
     });
   }
@@ -19,14 +19,14 @@ export class PrismaStatsRepository extends IStatsRepository {
   async findById(id: string): Promise<YearlyStats | null> {
     return this.prisma.yearlyStats.findUnique({
       where: { id },
-      include: { user: true, pullRequests: true },
+      include: { organizationMember: true, pullRequests: true },
     });
   }
 
   async findByUserId(userId: string): Promise<YearlyStats[]> {
     return this.prisma.yearlyStats.findMany({
-      where: { userId },
-      include: { user: true, pullRequests: true },
+      where: { organizationMemberId: userId },
+      include: { organizationMember: true, pullRequests: true },
       orderBy: { year: 'desc' },
     });
   }
@@ -34,7 +34,7 @@ export class PrismaStatsRepository extends IStatsRepository {
   async findByYear(year: number): Promise<YearlyStats[]> {
     return this.prisma.yearlyStats.findMany({
       where: { year },
-      include: { user: true, pullRequests: true },
+      include: { organizationMember: true, pullRequests: true },
       orderBy: { createdAt: 'desc' },
     });
   }
@@ -45,19 +45,16 @@ export class PrismaStatsRepository extends IStatsRepository {
   ): Promise<YearlyStats | null> {
     return this.prisma.yearlyStats.findUnique({
       where: {
-        userId_year: {
-          userId,
-          year,
-        },
+        organizationMemberId_year: { organizationMemberId: userId, year },
       },
-      include: { user: true, pullRequests: true },
+      include: { organizationMember: true, pullRequests: true },
     });
   }
 
   async create(data: Prisma.YearlyStatsCreateInput): Promise<YearlyStats> {
     return this.prisma.yearlyStats.create({
       data,
-      include: { user: true, pullRequests: true },
+      include: { organizationMember: true, pullRequests: true },
     });
   }
 
@@ -68,7 +65,7 @@ export class PrismaStatsRepository extends IStatsRepository {
     return this.prisma.yearlyStats.update({
       where: { id },
       data,
-      include: { user: true, pullRequests: true },
+      include: { organizationMember: true, pullRequests: true },
     });
   }
 

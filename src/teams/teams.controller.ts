@@ -40,6 +40,21 @@ export class TeamsController {
     return this.teamsService.create(createTeamDto);
   }
 
+  @Post(':id/users')
+  @ApiOperation({ summary: 'Add user to a team' })
+  @ApiParam({ name: 'id', description: 'Team ID' })
+  @ApiResponse({
+    status: 200,
+    description: 'User added to team successfully',
+  })
+  @ApiResponse({ status: 404, description: 'Team not found' })
+  async addUserToTeam(
+    @Param('id') id: string,
+    @Body('userId') userId: string,
+  ): Promise<any> {
+    return this.teamsService.addUserToTeam(id, userId);
+  }
+
   @Get()
   @ApiOperation({ summary: 'Get all teams or teams by company' })
   @ApiQuery({
@@ -86,7 +101,6 @@ export class TeamsController {
     @Param('id') id: string,
     @Body() updateTeamDto: PatchBodyTeamsDto,
   ): Promise<any> {
-    console.log('UpdateTeamDto:', id);
     return this.teamsService.update(id, updateTeamDto);
   }
 
@@ -98,5 +112,22 @@ export class TeamsController {
   @ApiResponse({ status: 404, description: 'Team not found' })
   async remove(@Param('id') id: string): Promise<void> {
     await this.teamsService.remove(id);
+  }
+
+  @Delete(':id/users/:userId')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiOperation({ summary: 'Remove user from a team' })
+  @ApiParam({ name: 'id', description: 'Team ID' })
+  @ApiParam({ name: 'userId', description: 'User ID' })
+  @ApiResponse({
+    status: 204,
+    description: 'User removed from team successfully',
+  })
+  @ApiResponse({ status: 404, description: 'Team or User not found' })
+  async removeUserFromTeam(
+    @Param('id') id: string,
+    @Param('userId') userId: string,
+  ): Promise<void> {
+    await this.teamsService.removeUserFromTeam(id, userId);
   }
 }

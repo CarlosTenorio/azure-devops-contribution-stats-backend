@@ -5,6 +5,7 @@ import { UsersModule } from './users/users.module';
 import { CompaniesModule } from './companies/companies.module';
 import { TeamsModule } from './teams/teams.module';
 import { StatsModule } from './stats/stats.module';
+import { OrganizationMemberModule } from './organization-member/organization-member.module';
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import { StatsModule } from './stats/stats.module';
     CompaniesModule,
     TeamsModule,
     StatsModule,
+    OrganizationMemberModule,
   ],
   providers: [AppService],
 })

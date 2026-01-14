@@ -45,8 +45,6 @@ model User {
 
   companyOwner Company? @relation("CompanyOwner")
 
-  stats YearlyStats[]
-
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -75,29 +73,30 @@ model OrganizationMember {
   companyId String?
 
   teams Team[]
+  stats YearlyStats[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
 model YearlyStats {
-  id                       String        @id @default(uuid())
-  userId                   String
+  id                       String             @id @default(uuid())
+  organizationMemberId     String
   year                     Int
-  commentsRatePerPRPercent Int           @default(0)
-  prCommentsMade           Int           @default(0)
-  prsClosed                Int           @default(0)
-  prsReviewed              Int           @default(0)
-  workItemsAssigned        Int           @default(0)
-  workItemsCreated         Int           @default(0)
-  reposMostActive          Json          @default("[]")
+  commentsRatePerPRPercent Int                @default(0)
+  prCommentsMade           Int                @default(0)
+  prsClosed                Int                @default(0)
+  prsReviewed              Int                @default(0)
+  workItemsAssigned        Int                @default(0)
+  workItemsCreated         Int                @default(0)
+  reposMostActive          Json               @default("[]")
   pullRequests             PullRequest[]
-  user                     User          @relation(fields: [userId], references: [id])
+  organizationMember       OrganizationMember @relation(fields: [organizationMemberId], references: [id])
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  @@unique([userId, year])
+  @@unique([organizationMemberId, year])
   @@index([year])
 }
 

@@ -11,6 +11,15 @@ import { ITeamsRepository } from './repositories/teams.repository';
 export class TeamsService {
   constructor(private readonly teamsRepository: ITeamsRepository) {}
 
+  async addUserToTeam(teamId: string, userId: string): Promise<any> {
+    const team = await this.findById(teamId);
+    if (!team) {
+      throw new NotFoundException(`Team with ID ${teamId} not found`);
+    }
+
+    return this.teamsRepository.addUserToTeam(teamId, userId);
+  }
+
   async findAll(): Promise<Team[]> {
     return this.teamsRepository.findAll();
   }
@@ -76,5 +85,13 @@ export class TeamsService {
   async remove(id: string): Promise<Team> {
     await this.findById(id);
     return this.teamsRepository.delete(id);
+  }
+
+  async removeUserFromTeam(teamId: string, userId: string): Promise<void> {
+    const team = await this.findById(teamId);
+    if (!team) {
+      throw new NotFoundException(`Team with ID ${teamId} not found`);
+    }
+    await this.teamsRepository.deleteUserFromTeam(teamId, userId);
   }
 }

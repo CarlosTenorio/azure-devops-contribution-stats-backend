@@ -72,9 +72,7 @@ export class StatsService {
       workItemsAssigned: createStatsDto.workItemsAssigned ?? 0,
       workItemsCreated: createStatsDto.workItemsCreated ?? 0,
       reposMostActive: createStatsDto.reposMostActive ?? [],
-      user: {
-        connect: { id: createStatsDto.userId },
-      },
+      organizationMember: { connect: { id: createStatsDto.userId } },
     });
 
     return this.transformStatsToDto(createdStats);

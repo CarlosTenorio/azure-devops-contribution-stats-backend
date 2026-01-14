@@ -33,6 +33,6 @@ export class TeamResponseDto {
   updatedAt: Date;
 
   @ApiProperty({ description: 'List of users in the team', type: [Object] })
-  @IsOptional()
-  users?: UserTeamResponseDto[];
+  @IsNotEmpty()
+  users: UserTeamResponseDto[];
 }

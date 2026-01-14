@@ -10,6 +10,14 @@ export class PrismaTeamsRepository extends ITeamsRepository {
     super();
   }
 
+  async addUserToTeam(teamId: string, userId: string): Promise<Team> {
+    return this.prisma.team.update({
+      where: { id: teamId },
+      data: { users: { connect: { id: userId } } },
+      include: { company: true, users: true },
+    });
+  }
+
   async findAll(): Promise<Team[]> {
     return this.prisma.team.findMany({
       include: { company: true, users: true },
@@ -50,5 +58,12 @@ export class PrismaTeamsRepository extends ITeamsRepository {
 
   async delete(id: string): Promise<Team> {
     return this.prisma.team.delete({ where: { id } });
+  }
+
+  async deleteUserFromTeam(teamId: string, userId: string): Promise<void> {
+    await this.prisma.team.update({
+      where: { id: teamId },
+      data: { users: { disconnect: { id: userId } } },
+    });
   }
 }

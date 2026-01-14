@@ -132,6 +132,7 @@ export class PrismaCompaniesRepository extends ICompaniesRepository {
         organizationMembers: true,
       },
     });
+
     return <GetCompanyDto>{
       createdAt: company.createdAt,
       id: company.id,
