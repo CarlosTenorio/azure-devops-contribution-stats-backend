@@ -5,7 +5,9 @@ import {
   GetCompanyDto,
   PostBodyCompaniesOrganizationMembersDto,
   PostBodyCompaniesTeamDto,
+  TeamResponseDto,
 } from '../dto';
+import { UserTeamResponseDto } from '../dto/user-team-response.dto';
 import { ICompaniesRepository } from './companies.repository';
 
 @Injectable()
@@ -45,11 +47,11 @@ export class PrismaCompaniesRepository extends ICompaniesRepository {
     );
   }
 
-  async findById(id: string): Promise<GetCompanyDto | null> {
+  async findById(id: string, year: number): Promise<GetCompanyDto | null> {
     const company = await this.prisma.company.findUnique({
       where: { id },
       include: {
-        teams: { include: { users: true } },
+        teams: { include: { users: { include: { stats: true } } } },
         organizationMembers: true,
       },
     });
@@ -58,20 +60,28 @@ export class PrismaCompaniesRepository extends ICompaniesRepository {
       createdAt: company.createdAt,
       id: company.id,
       name: company.name,
-      teams: company.teams.map((team) => ({
-        id: team.id,
-        name: team.name,
-        createdAt: team.createdAt,
-        updatedAt: team.updatedAt,
-        expanded: team.expanded,
-        users: team.users.map((user) => ({
-          azureId: user.azureId,
-          displayName: user.displayName,
-          id: user.id,
-          imageUrl: user.imageUrl,
-          uniqueName: user.uniqueName,
-        })),
-      })),
+      teams: company.teams.map(
+        (team) =>
+          <TeamResponseDto>{
+            id: team.id,
+            name: team.name,
+            createdAt: team.createdAt,
+            updatedAt: team.updatedAt,
+            expanded: team.expanded,
+            users: team.users.map(
+              (user) =>
+                <UserTeamResponseDto>{
+                  azureId: user.azureId,
+                  displayName: user.displayName,
+                  id: user.id,
+                  imageUrl: user.imageUrl,
+                  uniqueName: user.uniqueName,
+                  yearStats:
+                    user.stats.find((stat) => stat.year === year) ?? null,
+                },
+            ),
+          },
+      ),
       organizationMembers: company.organizationMembers.map((member) => ({
         id: member.id,
         azureId: member.azureId,
@@ -137,20 +147,26 @@ export class PrismaCompaniesRepository extends ICompaniesRepository {
       createdAt: company.createdAt,
       id: company.id,
       name: company.name,
-      teams: company.teams.map((team) => ({
-        id: team.id,
-        name: team.name,
-        createdAt: team.createdAt,
-        updatedAt: team.updatedAt,
-        expanded: team.expanded,
-        users: team.users.map((user) => ({
-          azureId: user.azureId,
-          displayName: user.displayName,
-          id: user.id,
-          imageUrl: user.imageUrl,
-          uniqueName: user.uniqueName,
-        })),
-      })),
+      teams: company.teams.map(
+        (team) =>
+          <TeamResponseDto>{
+            id: team.id,
+            name: team.name,
+            createdAt: team.createdAt,
+            updatedAt: team.updatedAt,
+            expanded: team.expanded,
+            users: team.users.map(
+              (user) =>
+                <UserTeamResponseDto>{
+                  azureId: user.azureId,
+                  displayName: user.displayName,
+                  id: user.id,
+                  imageUrl: user.imageUrl,
+                  uniqueName: user.uniqueName,
+                },
+            ),
+          },
+      ),
       organizationMembers: company.organizationMembers.map((member) => ({
         id: member.id,
         azureId: member.azureId,

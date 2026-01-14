@@ -8,8 +8,15 @@ import {
   Param,
   Patch,
   Post,
+  Query,
 } from '@nestjs/common';
-import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiOperation,
+  ApiParam,
+  ApiQuery,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { CompaniesService } from './companies.service';
 import {
   GetCompanyDto,
@@ -39,27 +46,43 @@ export class CompaniesController {
   @Get(':id')
   @ApiOperation({ summary: 'Get company by ID' })
   @ApiParam({ name: 'id', description: 'Company ID' })
+  @ApiQuery({
+    name: 'year',
+    description: 'Year for filtering data',
+    required: false,
+  })
   @ApiResponse({
     status: 200,
     description: 'Company found',
     type: GetCompanyDto,
   })
   @ApiResponse({ status: 404, description: 'Company not found' })
-  async findOne(@Param('id') id: string): Promise<GetCompanyDto> {
-    return this.companiesService.findById(id);
+  async findOne(
+    @Param('id') id: string,
+    @Query('year') year?: number,
+  ): Promise<GetCompanyDto> {
+    return this.companiesService.findById(id, year);
   }
 
   @Get(':id/teams')
   @ApiOperation({ summary: 'Get teams by Company ID' })
   @ApiParam({ name: 'id', description: 'Company ID' })
+  @ApiQuery({
+    name: 'year',
+    description: 'Year for filtering data',
+    required: false,
+  })
   @ApiResponse({
     status: 200,
     description: 'List of teams for the specified company',
     // type: GetCompaniesTeamsDto,
   })
   @ApiResponse({ status: 404, description: 'Company not found' })
-  async findTeamsByCompanyId(@Param('id') companyId: string): Promise<any[]> {
-    return this.companiesService.findTeamsByCompanyId(companyId);
+  async findTeamsByCompanyId(
+    @Param('id') companyId: string,
+    @Query('year') year: number,
+  ): Promise<any[]> {
+    return this.companiesService.findTeamsByCompanyId(companyId, year);
   }
 
   @Post(':id/teams')

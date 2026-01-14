@@ -7,7 +7,7 @@ import {
 
 export abstract class ICompaniesRepository {
   abstract findAll(): Promise<GetCompanyDto[]>;
-  abstract findById(id: string): Promise<GetCompanyDto | null>;
+  abstract findById(id: string, year?: number): Promise<GetCompanyDto | null>;
   abstract findByName(name: string): Promise<GetCompanyDto | null>;
   abstract findByOwnerId(ownerId: string): Promise<GetCompanyDto | null>;
   abstract findTeamsByCompanyId(companyId: string): Promise<any[]>;

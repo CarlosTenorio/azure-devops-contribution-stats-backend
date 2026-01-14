@@ -21,16 +21,16 @@ export class CompaniesService {
     return this.companiesRepository.findAll();
   }
 
-  async findById(id: string): Promise<GetCompanyDto> {
-    const company = await this.companiesRepository.findById(id);
+  async findById(id: string, year?: number): Promise<GetCompanyDto> {
+    const company = await this.companiesRepository.findById(id, year);
     if (!company) {
       throw new NotFoundException(`Company with ID ${id} not found`);
     }
     return company;
   }
 
-  async findTeamsByCompanyId(companyId: string): Promise<any[]> {
-    await this.findById(companyId);
+  async findTeamsByCompanyId(companyId: string, year: number): Promise<any[]> {
+    await this.findById(companyId, year);
     return this.companiesRepository.findTeamsByCompanyId(companyId);
   }
 

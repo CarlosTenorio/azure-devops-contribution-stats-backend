@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsString } from 'class-validator';
+import { YearStatsResponseDto } from './year-stats-response.dto';
 
 export class UserTeamResponseDto {
   @ApiProperty({
@@ -41,4 +42,11 @@ export class UserTeamResponseDto {
   @IsString()
   @IsNotEmpty()
   uniqueName: string;
+
+  @ApiProperty({
+    description: 'Yearly statistics associated with the user',
+    type: () => YearStatsResponseDto,
+  })
+  @IsNotEmpty()
+  yearStats: YearStatsResponseDto | null;
 }
