@@ -17,17 +17,15 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { StatsService } from '../stats/stats.service';
 import { PatchBodyOrganizationMemberDto } from './dto/patch/patch-body-organization-member.dto';
-import { OrganizationMemberService } from './organization-member.service';
 import { PutBodyOrganizationMemberYearlyStatsDto } from './dto/put';
+import { OrganizationMemberService } from './organization-member.service';
 
 @ApiTags('Organization Members')
-@Controller('organization-member')
+@Controller('organization-members')
 export class OrganizationMemberController {
   constructor(
     private readonly organizationMemberService: OrganizationMemberService,
-    private readonly statsService: StatsService,
   ) {}
 
   @Post()

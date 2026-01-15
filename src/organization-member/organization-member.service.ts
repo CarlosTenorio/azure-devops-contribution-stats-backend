@@ -144,7 +144,6 @@ export class OrganizationMemberService {
     updateStatsDto: PutBodyOrganizationMemberYearlyStatsDto,
   ): Promise<any> {
     const numberYear = parseInt(year);
-    await this.findById(id);
     return this.organizationMemberRepository.updateYearlyStats(
       id,
       numberYear,

@@ -50,22 +50,16 @@ export class PrismaOrganizationMemberRepository implements IOrganizationMemberRe
   }
 
   async findById(id: string): Promise<OrganizationMember | null> {
-    return this.prisma.organizationMember.findUnique({
-      where: { id },
-      include: {
-        company: true,
-        teams: true,
-      },
+    return this.prisma.organizationMember.findFirst({
+      where: { OR: [{ id }, { azureId: id }] },
+      include: { company: true, teams: true },
     });
   }
 
   async findByAzureId(azureId: string): Promise<OrganizationMember | null> {
     return this.prisma.organizationMember.findUnique({
       where: { azureId },
-      include: {
-        company: true,
-        teams: true,
-      },
+      include: { company: true, teams: true },
     });
   }
 
@@ -107,65 +101,108 @@ export class PrismaOrganizationMemberRepository implements IOrganizationMemberRe
     year: number,
     updateStatsDto: PutBodyOrganizationMemberYearlyStatsDto,
   ): Promise<any> {
-    const yearlyStats = await this.prisma.yearlyStats.findUnique({
-      where: { organizationMemberId_year: { organizationMemberId, year } },
+    console.log({ organizationMemberId });
+
+    const organizationMember = await this.prisma.organizationMember.findFirst({
+      where: {
+        OR: [{ id: organizationMemberId }, { azureId: organizationMemberId }],
+      },
     });
 
-    if (!yearlyStats) {
-      throw new Error('YearlyStats not found');
+    if (!organizationMember) {
+      throw new Error('Organization member not found');
     }
 
-    for (const pr of updateStatsDto.pullRequests) {
-      const existingPr = await this.prisma.pullRequest.findFirst({
-        where: {
-          pullRequestAzureId: pr.pullRequestAzureId,
-          yearlyStatsId: yearlyStats.id,
+    // const yearlyStats = await this.prisma.yearlyStats.findUnique({});
+
+    return this.prisma.yearlyStats.upsert({
+      where: {
+        organizationMemberId_year: {
+          organizationMemberId: organizationMember.id,
+          year,
         },
-      });
-
-      if (existingPr) {
-        await this.prisma.pullRequest.update({
-          where: { id: existingPr.id },
-          data: {
-            closedDate: pr.closedDate,
-            codeReviewAzureId: pr.codeReviewAzureId,
-            repositoryAzureId: pr.repositoryAzureId,
-            repositoryName: pr.repositoryName,
-            repositoryUrl: pr.repositoryUrl,
-            status: pr.status,
-            title: pr.title,
-          },
-        });
-      } else {
-        await this.prisma.pullRequest.create({
-          data: {
-            closedDate: pr.closedDate,
-            codeReviewAzureId: pr.codeReviewAzureId,
-            pullRequestAzureId: pr.pullRequestAzureId,
-            repositoryAzureId: pr.repositoryAzureId,
-            repositoryName: pr.repositoryName,
-            repositoryUrl: pr.repositoryUrl,
-            status: pr.status,
-            title: pr.title,
-            yearlyStatsId: yearlyStats.id,
-          },
-        });
-      }
-    }
-
-    return this.prisma.yearlyStats.update({
-      where: { organizationMemberId_year: { organizationMemberId, year } },
-      data: {
+      },
+      create: {
+        year: year,
+        organizationMember: { connect: { id: organizationMember.id } },
         commentsRatePerPRPercent: updateStatsDto.commentsRatePerPRPercent,
         prCommentsMade: updateStatsDto.prCommentsMade,
         prsClosed: updateStatsDto.prsClosed,
         prsReviewed: updateStatsDto.prsReviewed,
         workItemsAssigned: updateStatsDto.workItemsAssigned,
         workItemsCreated: updateStatsDto.workItemsCreated,
-        reposMostActive: updateStatsDto.reposMostActive.toString(),
+        reposMostActive: updateStatsDto.reposMostActive?.toString(),
+      },
+      update: {
+        year: year,
+        organizationMember: { connect: { id: organizationMember.id } },
+        commentsRatePerPRPercent: updateStatsDto.commentsRatePerPRPercent,
+        prCommentsMade: updateStatsDto.prCommentsMade,
+        prsClosed: updateStatsDto.prsClosed,
+        prsReviewed: updateStatsDto.prsReviewed,
+        workItemsAssigned: updateStatsDto.workItemsAssigned,
+        workItemsCreated: updateStatsDto.workItemsCreated,
+        reposMostActive: updateStatsDto.reposMostActive?.toString(),
       },
       include: { pullRequests: true },
     });
+
+    // if (
+    //   updateStatsDto.pullRequests &&
+    //   Array.isArray(updateStatsDto.pullRequests)
+    // ) {
+    //   for (const pr of updateStatsDto.pullRequests) {
+    //     const existingPr = await this.prisma.pullRequest.findFirst({
+    //       where: {
+    //         pullRequestAzureId: pr.pullRequestAzureId,
+    //         yearlyStatsId: yearlyStats.id,
+    //       },
+    //     });
+
+    //     if (existingPr) {
+    //       await this.prisma.pullRequest.update({
+    //         where: { id: existingPr.id },
+    //         data: {
+    //           closedDate: pr.closedDate,
+    //           codeReviewAzureId: pr.codeReviewAzureId,
+    //           repositoryAzureId: pr.repositoryAzureId,
+    //           repositoryName: pr.repositoryName,
+    //           repositoryUrl: pr.repositoryUrl,
+    //           status: pr.status,
+    //           title: pr.title,
+    //         },
+    //       });
+    //     } else {
+    //       await this.prisma.pullRequest.create({
+    //         data: {
+    //           closedDate: pr.closedDate,
+    //           codeReviewAzureId: pr.codeReviewAzureId,
+    //           pullRequestAzureId: pr.pullRequestAzureId,
+    //           repositoryAzureId: pr.repositoryAzureId,
+    //           repositoryName: pr.repositoryName,
+    //           repositoryUrl: pr.repositoryUrl,
+    //           status: pr.status,
+    //           title: pr.title,
+    //           yearlyStatsId: yearlyStats.id,
+    //         },
+    //       });
+    //     }
+    //   }
+    // }
+
+    // return this.prisma.yearlyStats.update({
+    //   where: { organizationMemberId_year: { organizationMemberId, year } },
+    //   data: {
+    //     commentsRatePerPRPercent: updateStatsDto.commentsRatePerPRPercent,
+    //     prCommentsMade: updateStatsDto.prCommentsMade,
+    //     prsClosed: updateStatsDto.prsClosed,
+    //     prsReviewed: updateStatsDto.prsReviewed,
+    //     workItemsAssigned: updateStatsDto.workItemsAssigned,
+    //     workItemsCreated: updateStatsDto.workItemsCreated,
+    //     reposMostActive: updateStatsDto.reposMostActive?.toString(),
+    //   },
+    //   include: { pullRequests: true },
+    // });
   }
 
   async delete(id: string): Promise<OrganizationMember> {
