@@ -2,7 +2,11 @@ import { Prisma, Team } from '@prisma/client';
 import { PatchBodyTeamsDto } from '../dto/patch';
 
 export abstract class ITeamsRepository {
-  abstract addUserToTeam(teamId: string, userId: string): Promise<Team>;
+  abstract addUserToTeam(
+    teamId: string,
+    userId: string,
+    year: number,
+  ): Promise<Team>;
   abstract findAll(): Promise<Team[]>;
   abstract findById(id: string): Promise<Team | null>;
   abstract findByName(name: string): Promise<Team | null>;

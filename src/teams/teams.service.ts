@@ -11,13 +11,17 @@ import { ITeamsRepository } from './repositories/teams.repository';
 export class TeamsService {
   constructor(private readonly teamsRepository: ITeamsRepository) {}
 
-  async addUserToTeam(teamId: string, userId: string): Promise<any> {
+  async addUserToTeam(
+    teamId: string,
+    userId: string,
+    year: number,
+  ): Promise<any> {
     const team = await this.findById(teamId);
     if (!team) {
       throw new NotFoundException(`Team with ID ${teamId} not found`);
     }
 
-    return this.teamsRepository.addUserToTeam(teamId, userId);
+    return this.teamsRepository.addUserToTeam(teamId, userId, year);
   }
 
   async findAll(): Promise<Team[]> {

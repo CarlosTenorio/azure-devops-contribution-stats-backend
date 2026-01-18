@@ -101,8 +101,6 @@ export class PrismaOrganizationMemberRepository implements IOrganizationMemberRe
     year: number,
     updateStatsDto: PutBodyOrganizationMemberYearlyStatsDto,
   ): Promise<any> {
-    console.log({ organizationMemberId });
-
     const organizationMember = await this.prisma.organizationMember.findFirst({
       where: {
         OR: [{ id: organizationMemberId }, { azureId: organizationMemberId }],
@@ -112,8 +110,6 @@ export class PrismaOrganizationMemberRepository implements IOrganizationMemberRe
     if (!organizationMember) {
       throw new Error('Organization member not found');
     }
-
-    // const yearlyStats = await this.prisma.yearlyStats.findUnique({});
 
     return this.prisma.yearlyStats.upsert({
       where: {

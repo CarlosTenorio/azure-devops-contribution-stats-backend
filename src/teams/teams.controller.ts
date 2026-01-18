@@ -51,8 +51,9 @@ export class TeamsController {
   async addUserToTeam(
     @Param('id') id: string,
     @Body('userId') userId: string,
+    @Body('year') year: number,
   ): Promise<any> {
-    return this.teamsService.addUserToTeam(id, userId);
+    return this.teamsService.addUserToTeam(id, userId, year);
   }
 
   @Get()

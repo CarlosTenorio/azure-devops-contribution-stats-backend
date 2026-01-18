@@ -10,12 +10,31 @@ export class PrismaTeamsRepository extends ITeamsRepository {
     super();
   }
 
-  async addUserToTeam(teamId: string, userId: string): Promise<Team> {
-    return this.prisma.team.update({
-      where: { id: teamId },
-      data: { users: { connect: { id: userId } } },
-      include: { company: true, users: true },
+  async addUserToTeam(
+    teamId: string,
+    userId: string,
+    year: number,
+  ): Promise<any> {
+    const user = await this.prisma.organizationMember.findFirst({
+      where: { OR: [{ id: userId }, { azureId: userId }] },
     });
+
+    const result = await this.prisma.team.update({
+      where: { id: teamId },
+      data: { users: { connect: { id: user.id } } },
+      include: {
+        company: true,
+        users: { include: { stats: { where: { year }, take: 1 } } },
+      },
+    });
+
+    return {
+      ...result,
+      users: result.users.map((user) => ({
+        ...user,
+        stats: user.stats[0] || null,
+      })),
+    };
   }
 
   async findAll(): Promise<Team[]> {
