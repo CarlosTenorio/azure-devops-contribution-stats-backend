@@ -20,7 +20,7 @@ export class PostBodyOrganizationMemberYearlyStatsPullRequestDto {
   commentsMade: number;
   createdAt: Date;
   mergedAt: Date | null;
-  prId: string;
+  repoId: string;
   reviewerIds: string[];
   title: string;
 }
