@@ -14,10 +14,7 @@ export class PrismaOrganizationMemberRepository implements IOrganizationMemberRe
   ): Promise<OrganizationMember> {
     return this.prisma.organizationMember.create({
       data,
-      include: {
-        company: true,
-        teams: true,
-      },
+      include: { company: true, teams: true },
     });
   }
 
@@ -199,7 +196,7 @@ export class PrismaOrganizationMemberRepository implements IOrganizationMemberRe
         prsReviewed: updateStatsDto.prsReviewed,
         workItemsAssigned: updateStatsDto.workItemsAssigned,
         workItemsCreated: updateStatsDto.workItemsCreated,
-        reposMostActive: updateStatsDto.reposMostActive.toString(),
+        reposMostActive: JSON.stringify(updateStatsDto.reposMostActive),
         pullRequests: {
           create: updateStatsDto.pullRequests.map((pr) => ({
             closedDate: pr.closedDate,
@@ -222,7 +219,7 @@ export class PrismaOrganizationMemberRepository implements IOrganizationMemberRe
         prsReviewed: updateStatsDto.prsReviewed,
         workItemsAssigned: updateStatsDto.workItemsAssigned,
         workItemsCreated: updateStatsDto.workItemsCreated,
-        reposMostActive: updateStatsDto.reposMostActive.toString(),
+        reposMostActive: JSON.stringify(updateStatsDto.reposMostActive),
         pullRequests: {
           deleteMany: {}, // Clear existing pull requests
           create: updateStatsDto.pullRequests.map((pr) => ({
