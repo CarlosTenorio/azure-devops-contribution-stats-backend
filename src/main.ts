@@ -1,10 +1,20 @@
 import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import * as express from 'express';
 import { AppModule } from './app.module';
 
+const limitMBForLargePayloads = '50mb';
+
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, {
+    rawBody: true,
+  });
+
+  app.use(express.json({ limit: limitMBForLargePayloads }));
+  app.use(
+    express.urlencoded({ extended: true, limit: limitMBForLargePayloads }),
+  );
 
   app.enableCors({
     origin: '*',
