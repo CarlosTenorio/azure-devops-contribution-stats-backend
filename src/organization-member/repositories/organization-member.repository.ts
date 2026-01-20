@@ -4,7 +4,10 @@ import { PutBodyOrganizationMemberYearlyStatsDto } from '../dto/put';
 
 export abstract class IOrganizationMemberRepository {
   abstract findAll(): Promise<OrganizationMember[]>;
-  abstract findById(id: string): Promise<OrganizationMember | null>;
+  abstract findById(
+    id: string,
+    year?: number,
+  ): Promise<OrganizationMember | null>;
   abstract findByAzureId(azureId: string): Promise<OrganizationMember | null>;
   abstract findByUniqueName(
     uniqueName: string,

@@ -20,6 +20,7 @@ import {
 import { PatchBodyOrganizationMemberDto } from './dto/patch/patch-body-organization-member.dto';
 import { PutBodyOrganizationMemberYearlyStatsDto } from './dto/put';
 import { OrganizationMemberService } from './organization-member.service';
+import { OrganizationMember } from '@prisma/client';
 
 @ApiTags('Organization Members')
 @Controller('organization-members')
@@ -70,8 +71,25 @@ export class OrganizationMemberController {
     description: 'Organization member found',
   })
   @ApiResponse({ status: 404, description: 'Organization member not found' })
-  async findOne(@Param('id') id: string): Promise<any> {
+  async findOne(@Param('id') id: string): Promise<OrganizationMember> {
     return this.organizationMemberService.findById(id);
+  }
+
+  @Get(':id/:year')
+  @ApiOperation({ summary: 'Get organization member by ID' })
+  @ApiParam({ name: 'id', description: 'Organization member ID' })
+  @ApiParam({ name: 'year', description: 'Year filter' })
+  @ApiResponse({
+    status: 200,
+    description: 'Organization member found',
+  })
+  @ApiResponse({ status: 404, description: 'Organization member not found' })
+  async findOneByYear(
+    @Param('id') id: string,
+    @Param('year') year: string,
+  ): Promise<OrganizationMember> {
+    const yearNumber = parseInt(year);
+    return this.organizationMemberService.findById(id, yearNumber);
   }
 
   @Get(':id/yearly-stats')

@@ -41,48 +41,120 @@ export class PrismaOrganizationMemberRepository implements IOrganizationMemberRe
   }
 
   async findAll(): Promise<OrganizationMember[]> {
-    return this.prisma.organizationMember.findMany({
+    const result = await this.prisma.organizationMember.findMany({
       include: {
         company: true,
         teams: true,
+        stats: { include: { pullRequests: true } },
       },
     });
+
+    return result.map((member) => ({
+      ...member,
+      stats: member.stats.map((stat) => ({
+        ...stat,
+        reposMostActive:
+          typeof stat.reposMostActive === 'string'
+            ? JSON.parse(stat.reposMostActive)
+            : stat.reposMostActive,
+      })),
+    }));
   }
 
-  async findById(id: string): Promise<OrganizationMember | null> {
-    return this.prisma.organizationMember.findFirst({
+  async findById(id: string, year?: number): Promise<any | null> {
+    const result = await this.prisma.organizationMember.findFirst({
       where: { OR: [{ id }, { azureId: id }] },
-      include: { company: true, teams: true },
+      include: {
+        company: true,
+        teams: true,
+        stats: {
+          where: year ? { year } : undefined,
+          include: { pullRequests: true },
+        },
+      },
     });
+
+    if (result && result.stats) {
+      result.stats = result.stats.map((stat) => ({
+        ...stat,
+        reposMostActive:
+          typeof stat.reposMostActive === 'string'
+            ? JSON.parse(stat.reposMostActive)
+            : stat.reposMostActive,
+      }));
+    }
+
+    return result;
   }
 
   async findByAzureId(azureId: string): Promise<OrganizationMember | null> {
-    return this.prisma.organizationMember.findUnique({
+    const result = await this.prisma.organizationMember.findUnique({
       where: { azureId },
-      include: { company: true, teams: true },
+      include: {
+        company: true,
+        teams: true,
+        stats: { include: { pullRequests: true } },
+      },
     });
+
+    if (result && result.stats) {
+      result.stats = result.stats.map((stat) => ({
+        ...stat,
+        reposMostActive:
+          typeof stat.reposMostActive === 'string'
+            ? JSON.parse(stat.reposMostActive)
+            : stat.reposMostActive,
+      }));
+    }
+
+    return result;
   }
 
   async findByUniqueName(
     uniqueName: string,
   ): Promise<OrganizationMember | null> {
-    return this.prisma.organizationMember.findUnique({
+    const result = await this.prisma.organizationMember.findUnique({
       where: { uniqueName },
       include: {
         company: true,
         teams: true,
+        stats: { include: { pullRequests: true } },
       },
     });
+
+    if (result && result.stats) {
+      result.stats = result.stats.map((stat) => ({
+        ...stat,
+        reposMostActive:
+          typeof stat.reposMostActive === 'string'
+            ? JSON.parse(stat.reposMostActive)
+            : stat.reposMostActive,
+      }));
+    }
+
+    return result;
   }
 
   async findByCompanyId(companyId: string): Promise<OrganizationMember[]> {
-    return this.prisma.organizationMember.findMany({
+    const result = await this.prisma.organizationMember.findMany({
       where: { companyId },
       include: {
         company: true,
         teams: true,
+        stats: { include: { pullRequests: true } },
       },
     });
+
+    return result.map((member) => ({
+      ...member,
+      stats: member.stats.map((stat) => ({
+        ...stat,
+        reposMostActive:
+          typeof stat.reposMostActive === 'string'
+            ? JSON.parse(stat.reposMostActive)
+            : stat.reposMostActive,
+      })),
+    }));
   }
 
   async update(id: string, data: any): Promise<OrganizationMember> {
@@ -127,7 +199,19 @@ export class PrismaOrganizationMemberRepository implements IOrganizationMemberRe
         prsReviewed: updateStatsDto.prsReviewed,
         workItemsAssigned: updateStatsDto.workItemsAssigned,
         workItemsCreated: updateStatsDto.workItemsCreated,
-        reposMostActive: updateStatsDto.reposMostActive?.toString(),
+        reposMostActive: updateStatsDto.reposMostActive.toString(),
+        pullRequests: {
+          create: updateStatsDto.pullRequests.map((pr) => ({
+            closedDate: pr.closedDate,
+            codeReviewAzureId: pr.codeReviewAzureId,
+            pullRequestAzureId: pr.pullRequestAzureId,
+            repositoryAzureId: pr.repositoryAzureId,
+            repositoryName: pr.repositoryName,
+            repositoryUrl: pr.repositoryUrl,
+            status: pr.status,
+            title: pr.title,
+          })),
+        },
       },
       update: {
         year: year,
@@ -138,7 +222,20 @@ export class PrismaOrganizationMemberRepository implements IOrganizationMemberRe
         prsReviewed: updateStatsDto.prsReviewed,
         workItemsAssigned: updateStatsDto.workItemsAssigned,
         workItemsCreated: updateStatsDto.workItemsCreated,
-        reposMostActive: updateStatsDto.reposMostActive?.toString(),
+        reposMostActive: updateStatsDto.reposMostActive.toString(),
+        pullRequests: {
+          deleteMany: {}, // Clear existing pull requests
+          create: updateStatsDto.pullRequests.map((pr) => ({
+            closedDate: pr.closedDate,
+            codeReviewAzureId: pr.codeReviewAzureId,
+            pullRequestAzureId: pr.pullRequestAzureId,
+            repositoryAzureId: pr.repositoryAzureId,
+            repositoryName: pr.repositoryName,
+            repositoryUrl: pr.repositoryUrl,
+            status: pr.status,
+            title: pr.title,
+          })),
+        },
       },
       include: { pullRequests: true },
     });

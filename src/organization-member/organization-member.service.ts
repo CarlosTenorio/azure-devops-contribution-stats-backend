@@ -4,26 +4,26 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { OrganizationMember } from '@prisma/client';
-import { StatsService } from '../stats/stats.service';
 import { PatchBodyOrganizationMemberDto } from './dto/patch/patch-body-organization-member.dto';
 import { PostBodyOrganizationMemberYearlyStatsDto } from './dto/post';
-import { IOrganizationMemberRepository } from './repositories/organization-member.repository';
 import { PutBodyOrganizationMemberYearlyStatsDto } from './dto/put';
+import { IOrganizationMemberRepository } from './repositories/organization-member.repository';
 
 @Injectable()
 export class OrganizationMemberService {
   constructor(
     private readonly organizationMemberRepository: IOrganizationMemberRepository,
-    private readonly statsService: StatsService,
   ) {}
 
   async findAll(): Promise<OrganizationMember[]> {
     return this.organizationMemberRepository.findAll();
   }
 
-  async findById(id: string): Promise<OrganizationMember> {
-    const organizationMember =
-      await this.organizationMemberRepository.findById(id);
+  async findById(id: string, year?: number): Promise<OrganizationMember> {
+    const organizationMember = await this.organizationMemberRepository.findById(
+      id,
+      year,
+    );
     if (!organizationMember) {
       throw new NotFoundException(
         `Organization member with ID ${id} not found`,
@@ -37,7 +37,6 @@ export class OrganizationMemberService {
   }
 
   async create(createOrgMemberDto: any): Promise<OrganizationMember> {
-    // Check if organization member with the same azureId already exists
     const existingByAzureId =
       await this.organizationMemberRepository.findByAzureId(
         createOrgMemberDto.azureId,
