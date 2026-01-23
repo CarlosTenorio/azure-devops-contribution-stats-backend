@@ -52,7 +52,13 @@ export class PrismaOrganizationMemberRepository implements IOrganizationMemberRe
         ...stat,
         reposMostActive:
           typeof stat.reposMostActive === 'string'
-            ? JSON.parse(stat.reposMostActive)
+            ? (() => {
+                try {
+                  return JSON.parse(stat.reposMostActive);
+                } catch (error) {
+                  return null;
+                }
+              })()
             : stat.reposMostActive,
       })),
     }));
@@ -76,7 +82,13 @@ export class PrismaOrganizationMemberRepository implements IOrganizationMemberRe
         ...stat,
         reposMostActive:
           typeof stat.reposMostActive === 'string'
-            ? JSON.parse(stat.reposMostActive)
+            ? (() => {
+                try {
+                  return JSON.parse(stat.reposMostActive);
+                } catch (error) {
+                  return null;
+                }
+              })()
             : stat.reposMostActive,
       }));
     }
@@ -99,7 +111,13 @@ export class PrismaOrganizationMemberRepository implements IOrganizationMemberRe
         ...stat,
         reposMostActive:
           typeof stat.reposMostActive === 'string'
-            ? JSON.parse(stat.reposMostActive)
+            ? (() => {
+                try {
+                  return JSON.parse(stat.reposMostActive);
+                } catch (error) {
+                  return null;
+                }
+              })()
             : stat.reposMostActive,
       }));
     }
@@ -124,7 +142,13 @@ export class PrismaOrganizationMemberRepository implements IOrganizationMemberRe
         ...stat,
         reposMostActive:
           typeof stat.reposMostActive === 'string'
-            ? JSON.parse(stat.reposMostActive)
+            ? (() => {
+                try {
+                  return JSON.parse(stat.reposMostActive);
+                } catch (error) {
+                  return null;
+                }
+              })()
             : stat.reposMostActive,
       }));
     }
@@ -148,7 +172,13 @@ export class PrismaOrganizationMemberRepository implements IOrganizationMemberRe
         ...stat,
         reposMostActive:
           typeof stat.reposMostActive === 'string'
-            ? JSON.parse(stat.reposMostActive)
+            ? (() => {
+                try {
+                  return JSON.parse(stat.reposMostActive);
+                } catch (error) {
+                  return null;
+                }
+              })()
             : stat.reposMostActive,
       })),
     }));

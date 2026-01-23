@@ -76,8 +76,23 @@ export class PrismaCompaniesRepository extends ICompaniesRepository {
                   id: user.id,
                   imageUrl: user.imageUrl,
                   uniqueName: user.uniqueName,
-                  yearStats:
-                    user.stats.find((stat) => stat.year === year) ?? null,
+                  yearStats: (() => {
+                    const stat = user.stats.find((stat) => stat.year === year);
+                    if (!stat) return null;
+                    return {
+                      ...stat,
+                      reposMostActive:
+                        typeof stat.reposMostActive === 'string'
+                          ? (() => {
+                              try {
+                                return JSON.parse(stat.reposMostActive);
+                              } catch (error) {
+                                return null;
+                              }
+                            })()
+                          : stat.reposMostActive,
+                    };
+                  })(),
                 },
             ),
           },

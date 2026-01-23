@@ -10,12 +10,7 @@ export class YearStatsResponseDto {
 }
 
 export class YearlyStatsRepoMostActiveDto {
-  closedAt?: Date;
-  commentsMade?: number;
-  createdAt?: Date;
-  mergedAt?: Date | null;
   repoId?: string;
-  reviewerIds?: string[];
   title?: string;
 }
 
