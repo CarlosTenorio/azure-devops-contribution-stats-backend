@@ -6,8 +6,8 @@ import {
   HttpCode,
   HttpStatus,
   Param,
-  Patch,
   Post,
+  Put,
   Query,
 } from '@nestjs/common';
 import {
@@ -140,7 +140,7 @@ export class CompaniesController {
     );
   }
 
-  @Patch(':id')
+  @Put(':id')
   @ApiOperation({ summary: 'Update company by ID' })
   @ApiParam({ name: 'id', description: 'Company ID' })
   @ApiResponse({

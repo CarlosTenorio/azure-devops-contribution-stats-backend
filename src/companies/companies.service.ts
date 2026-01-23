@@ -70,19 +70,6 @@ export class CompaniesService {
     id: string,
     putBodyCompaniesDto: PutBodyCompaniesDto,
   ): Promise<any> {
-    const company = await this.findById(id);
-
-    if (putBodyCompaniesDto.name && putBodyCompaniesDto.name !== company.name) {
-      const existingCompany = await this.companiesRepository.findByName(
-        putBodyCompaniesDto.name,
-      );
-      if (existingCompany && existingCompany.id !== id) {
-        throw new ConflictException(
-          `Company with name '${putBodyCompaniesDto.name}' already exists`,
-        );
-      }
-    }
-
     return this.companiesRepository.update(id, putBodyCompaniesDto);
   }
 

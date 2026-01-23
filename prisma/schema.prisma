@@ -8,8 +8,14 @@ datasource db {
 }
 
 model Company {
-  id   String @id @default(uuid())
-  name String
+  id                                          String @id @default(uuid())
+  name                                        String
+  minPRsClosedToBeGoodContributor             Int    @default(80)
+  minPrsReviewedToBeGoodReviewer              Int    @default(200)
+  minWorkItemsCreatedToBeGoodContributor      Int    @default(200)
+  minWorkItemsAssignedToBeGoodContributor     Int    @default(200)
+  minCommentsRatePerPRPercentToBeGoodReviewer Int    @default(15)
+  projectURL                                  String
 
   invitations         Invitation[]
   organizationMembers OrganizationMember[]
