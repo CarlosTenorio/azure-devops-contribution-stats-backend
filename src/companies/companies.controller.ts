@@ -23,6 +23,7 @@ import {
   PostBodyCompaniesOrganizationMembersDto,
   PostBodyCompaniesTeamDto,
   PostResponseCompaniesDto,
+  PostResponseCompaniesOrganizationMembersDto,
 } from './dto';
 import { PostBodyCompaniesDto } from './dto/post/post-body-companies.dto';
 import { PutBodyCompaniesDto } from './dto/put-body-companies.dto';
@@ -133,7 +134,7 @@ export class CompaniesController {
     @Param('id') companyId: string,
     @Body()
     postBodyCompaniesOrganizationMembersDto: PostBodyCompaniesOrganizationMembersDto,
-  ): Promise<any> {
+  ): Promise<PostResponseCompaniesOrganizationMembersDto> {
     return this.companiesService.createOrganizationMembers(
       companyId,
       postBodyCompaniesOrganizationMembersDto,

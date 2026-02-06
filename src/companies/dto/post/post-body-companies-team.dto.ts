@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsString } from 'class-validator';
+import { IsBoolean, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
 export class PostBodyCompaniesTeamDto {
   @ApiProperty({
@@ -10,4 +10,13 @@ export class PostBodyCompaniesTeamDto {
   @IsNotEmpty()
   @IsString()
   name: string;
+
+  @ApiProperty({
+    description: 'Whether the team is expanded by default',
+    example: false,
+    required: false,
+  })
+  @IsOptional()
+  @IsBoolean()
+  expanded?: boolean;
 }

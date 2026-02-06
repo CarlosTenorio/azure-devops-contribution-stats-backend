@@ -8,6 +8,7 @@ import {
   GetCompanyDto,
   PostBodyCompaniesOrganizationMembersDto,
   PostBodyCompaniesTeamDto,
+  PostResponseCompaniesOrganizationMembersDto,
 } from './dto';
 import { PostBodyCompaniesDto } from './dto/post/post-body-companies.dto';
 import { PutBodyCompaniesDto } from './dto/put-body-companies.dto';
@@ -49,7 +50,7 @@ export class CompaniesService {
   async createOrganizationMembers(
     companyId: string,
     postBodyCompaniesOrganizationMembersDto: PostBodyCompaniesOrganizationMembersDto,
-  ): Promise<any> {
+  ): Promise<PostResponseCompaniesOrganizationMembersDto> {
     return this.companiesRepository.createOrganizationMembers(
       companyId,
       postBodyCompaniesOrganizationMembersDto,

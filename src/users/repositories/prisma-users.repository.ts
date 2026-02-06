@@ -46,6 +46,9 @@ export class PrismaUsersRepository extends IUsersRepository {
         },
       },
     });
+    if (!user) {
+      return null;
+    }
     const companyWhereComesInvitation = await this.prisma.invitation.findFirst({
       where: { email: user?.email },
       include: {
